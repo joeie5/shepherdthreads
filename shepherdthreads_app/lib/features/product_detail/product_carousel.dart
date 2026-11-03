@@ -64,16 +64,35 @@ class _ProductCarouselState extends State<ProductCarousel> {
             const SizedBox(height: 32),
             SizedBox(
               height: 420,
-              child: ListView.separated(
-                controller: _controller,
-                scrollDirection: Axis.horizontal,
-                padding: EdgeInsets.symmetric(horizontal: hPad),
-                itemCount: widget.products.length,
-                separatorBuilder: (_, _) => SizedBox(width: isDesktop ? 24 : 12),
-                itemBuilder: (context, i) => SizedBox(
-                  width: isDesktop ? 260 : MediaQuery.sizeOf(context).width * 0.62,
-                  child: ProductCard(product: widget.products[i]),
-                ),
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  // Mirrors react-source's ProductCarousel.tsx <li> widths exactly:
+                  // mobile `w-[64%]`, sm `sm:w-[40%]`, desktop
+                  // `md:w-[calc((100%-72px)/4)]` (4 cards, 3×24px gaps) — not a
+                  // fixed pixel width, so cards scale with the container like
+                  // the rest of the site instead of looking undersized on wide
+                  // viewports.
+                  final viewportWidth = constraints.maxWidth - hPad * 2;
+                  final double itemWidth;
+                  if (isDesktop) {
+                    itemWidth = (viewportWidth - 24 * 3) / 4;
+                  } else if (AppBreakpoints.isSmall(MediaQuery.sizeOf(context).width)) {
+                    itemWidth = viewportWidth * 0.40;
+                  } else {
+                    itemWidth = viewportWidth * 0.64;
+                  }
+                  return ListView.separated(
+                    controller: _controller,
+                    scrollDirection: Axis.horizontal,
+                    padding: EdgeInsets.symmetric(horizontal: hPad),
+                    itemCount: widget.products.length,
+                    separatorBuilder: (_, _) => SizedBox(width: isDesktop ? 24 : 12),
+                    itemBuilder: (context, i) => SizedBox(
+                      width: itemWidth,
+                      child: ProductCard(product: widget.products[i]),
+                    ),
+                  );
+                },
               ),
             ),
           ],

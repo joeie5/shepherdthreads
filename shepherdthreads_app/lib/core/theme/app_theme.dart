@@ -7,9 +7,11 @@ import 'app_text_styles.dart';
 class AppBreakpoints {
   AppBreakpoints._();
 
+  static const double sm = 640;
   static const double md = 768;
   static const double lg = 1024;
 
+  static bool isSmall(double width) => width >= sm;
   static bool isDesktop(double width) => width >= md;
   static bool isLargeDesktop(double width) => width >= lg;
 }
