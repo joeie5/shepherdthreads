@@ -42,8 +42,10 @@ class AppImages {
   static const crownedTeeFrontBlack = 'assets/images/crowned-tee-front-black.png';
   static const crownedTeeBackBlack = 'assets/images/crowned-tee-back-black.png';
   static const crownedTeeFrontLightApricot = 'assets/images/crowned-tee-front-light-apricot.png';
+  static const crownedTeeBackLightApricot = 'assets/images/crowned-tee-back-light-apricot.png';
   static const savedJoggersFrontMediumBlue = 'assets/images/saved-joggers-front-medium-blue.png';
   static const savedJoggersBackMediumBlue = 'assets/images/saved-joggers-back-medium-blue.png';
+  static const savedJoggersFrontGrey = 'assets/images/saved-joggers-front-grey.webp';
   static const savedJoggersBackGrey = 'assets/images/saved-joggers-back-grey.webp';
   static const identityPoloFrontBlack = 'assets/images/identity-polo-front-black.webp';
   static const identityPoloBackBlack = 'assets/images/identity-polo-back-black.webp';

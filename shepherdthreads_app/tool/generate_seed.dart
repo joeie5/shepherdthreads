@@ -2,6 +2,15 @@
 // INSERT statements for supabase/schema.sql. Run with:
 //   dart run tool/generate_seed.dart > supabase/seed.sql
 //
+// CAVEAT as of the Supabase Storage migration (0003_storage.sql /
+// 0004_image_urls.sql): this pulls `images` straight from
+// ColorVariant.images / Testimonial.image in lib/core/data/*.dart, which
+// still point at local `assets/images/...` paths (the app's bundled
+// fallback). Re-running this and re-applying the output will silently
+// overwrite the live product_color_variants/testimonials rows back to
+// those local paths, undoing the Storage URL migration — re-run
+// 0004_image_urls.sql afterward if that happens.
+//
 // Not part of the app itself — delete once the real catalog is managed
 // directly in Supabase instead of ported from lib/core/data/*.dart.
 import '../lib/core/data/products_data.dart';

@@ -59,7 +59,7 @@ insert into products (id, name, subtitle, price, compare_at, category, collectio
   updated_at = now();
 delete from product_color_variants where product_id = 'crowned-tee';
 insert into product_color_variants (product_id, name, hex, images, sort_order) values ('crowned-tee', 'Black', '#0A0A0A', ARRAY['assets/images/crowned-tee-front-black.png', 'assets/images/crowned-tee-back-black.png']::text[], 0);
-insert into product_color_variants (product_id, name, hex, images, sort_order) values ('crowned-tee', 'Light Apricot', '#F1D9C4', ARRAY['assets/images/crowned-tee-front-light-apricot.png']::text[], 1);
+insert into product_color_variants (product_id, name, hex, images, sort_order) values ('crowned-tee', 'Light Apricot', '#F1D9C4', ARRAY['assets/images/crowned-tee-front-light-apricot.png', 'assets/images/crowned-tee-back-light-apricot.png']::text[], 1);
 
 insert into products (id, name, subtitle, price, compare_at, category, collection_id, description, verse_text, verse_reference, sizes, sold_out_sizes, sold_out, is_new, bestseller_rank, added_on, details, fabric, care) values (
   'saved-joggers', 'Saved Joggers', 'Relaxed Fleece Jogger', 24.2, null,
@@ -79,7 +79,7 @@ insert into products (id, name, subtitle, price, compare_at, category, collectio
   updated_at = now();
 delete from product_color_variants where product_id = 'saved-joggers';
 insert into product_color_variants (product_id, name, hex, images, sort_order) values ('saved-joggers', 'Medium Blue', '#7FA8D9', ARRAY['assets/images/saved-joggers-front-medium-blue.png', 'assets/images/saved-joggers-back-medium-blue.png']::text[], 0);
-insert into product_color_variants (product_id, name, hex, images, sort_order) values ('saved-joggers', 'Grey', '#8C8C88', ARRAY['assets/images/saved-joggers-back-grey.webp']::text[], 1);
+insert into product_color_variants (product_id, name, hex, images, sort_order) values ('saved-joggers', 'Grey', '#8C8C88', ARRAY['assets/images/saved-joggers-front-grey.webp', 'assets/images/saved-joggers-back-grey.webp']::text[], 1);
 
 insert into products (id, name, subtitle, price, compare_at, category, collection_id, description, verse_text, verse_reference, sizes, sold_out_sizes, sold_out, is_new, bestseller_rank, added_on, details, fabric, care) values (
   'identity-polo', 'Identity Polo', 'Piped Pique Polo', 21.4, null,

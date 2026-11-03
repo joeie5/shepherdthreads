@@ -87,11 +87,10 @@ final mockProducts = <Product>[
         hex: '#0A0A0A',
         images: [AppImages.crownedTeeFrontBlack, AppImages.crownedTeeBackBlack],
       ),
-      // Only a front shot exists for this colorway — no back image to show yet.
       const ColorVariant(
         name: 'Light Apricot',
         hex: '#F1D9C4',
-        images: [AppImages.crownedTeeFrontLightApricot],
+        images: [AppImages.crownedTeeFrontLightApricot, AppImages.crownedTeeBackLightApricot],
       ),
     ],
     sizes: _realSizesWith3xl,
@@ -125,8 +124,11 @@ final mockProducts = <Product>[
         hex: '#7FA8D9',
         images: [AppImages.savedJoggersFrontMediumBlue, AppImages.savedJoggersBackMediumBlue],
       ),
-      // Only a back shot exists for this colorway — no front image to show yet.
-      const ColorVariant(name: 'Grey', hex: '#8C8C88', images: [AppImages.savedJoggersBackGrey]),
+      const ColorVariant(
+        name: 'Grey',
+        hex: '#8C8C88',
+        images: [AppImages.savedJoggersFrontGrey, AppImages.savedJoggersBackGrey],
+      ),
     ],
     sizes: _realSizes,
     bestsellerRank: 3,
