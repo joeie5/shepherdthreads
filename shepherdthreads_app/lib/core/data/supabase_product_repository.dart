@@ -21,7 +21,7 @@ class SupabaseProductRepository implements ProductRepository {
     final rows = await _client
         .from('products')
         .select('*, product_color_variants(*)')
-        .order('bestseller_rank');
+        .order('bestseller_rank', ascending: true);
     return rows.map(_productFromRow).toList();
   }
 

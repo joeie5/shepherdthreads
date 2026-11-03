@@ -378,3 +378,32 @@ create policy "owner read" on order_timeline_steps for select using (
 -- validation happen server-side instead of trusting client-submitted
 -- prices. TODO: write that function before swapping CheckoutNotifier off
 -- the current client-side fake-success path.
+
+-- ============================================================================
+-- Grants
+-- ============================================================================
+-- RLS policies only take effect once the role already has the base
+-- table-level privilege — enabling RLS does not grant one implicitly. With
+-- "Automatically expose new tables" off (intentional, see project notes),
+-- these have to be issued explicitly or every anon/authenticated query
+-- fails with `permission denied for table ...` even though a matching RLS
+-- policy exists above.
+grant usage on schema public to anon, authenticated;
+
+grant select on
+  products, product_color_variants, collections,
+  journal_posts, faq_groups, faq_items, testimonials,
+  delivery_options, promos
+  to anon, authenticated;
+
+grant select, insert, update, delete on
+  profiles, addresses, payment_methods, wishlist_items, cart_items
+  to authenticated;
+
+-- select only: inserts/updates to orders/order_lines/order_timeline_steps
+-- happen through the (not-yet-written) place_order RPC, which runs as the
+-- function owner and bypasses this grant — see TODO above.
+grant select on orders, order_lines, order_timeline_steps to authenticated;
+
+-- Sequences aren't used (all surrogate keys are gen_random_uuid()), so no
+-- `grant usage on all sequences` is needed.

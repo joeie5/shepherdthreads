@@ -44,61 +44,81 @@ routes, including deep-link navigation.
    `ContactPage`, `FaqPage`, `NotFoundPage`.
 10. **Supabase wiring** — see below.
 
-## Stage 10: Supabase — what's done vs. deferred
+## Stage 10: Supabase — live
 
-**Done:**
-- `supabase/schema.sql` — a full draft schema (catalog, color variants,
+The product/color-variant/collection catalog is live against a real
+Supabase project (`skbebcjztkxmywznpwsx`, `us-east-2`), not mock data.
+
+**Schema & data:**
+- `supabase/schema.sql` — full schema (catalog, color variants,
   collections, journal/FAQ/testimonials, profiles, addresses, payment
   methods (display-only), orders/order lines/timeline, wishlist, promos,
-  an optional `cart_items` table) with RLS policies sketched. **Not applied
-  to any project** — it's for review. Inline `TODO`s flag the two decisions
-  it can't make for you: guest order lookup (needs an edge function, not a
-  direct table read) and server-side order placement (needs a
-  `place_order` RPC so totals aren't trusted from the client).
-- `supabase_flutter` added to `pubspec.yaml`.
-- `lib/core/data/supabase_product_repository.dart` — a working
-  `SupabaseProductRepository implements ProductRepository`, querying the
-  schema above and mapping rows back to the existing `Product`/
-  `ColorVariant`/`ProductCollection` models.
+  an optional `cart_items` table), applied to the live project. RLS is
+  enabled on every table with explicit `grant`s (see `0002_grants.sql` —
+  RLS policies alone don't work without the base table grant, which
+  "Automatically expose new tables" would otherwise have handled). Inline
+  `TODO`s flag two decisions still open: guest order lookup (needs an edge
+  function, not a direct table read) and server-side order placement
+  (needs a `place_order` RPC so totals aren't trusted from the client).
+- `supabase/seed.sql` — generated from `lib/core/data/*.dart` by
+  `tool/generate_seed.dart` (`dart run tool/generate_seed.dart >
+  supabase/seed.sql`), so the seeded rows can't drift from what the app
+  expects. Applied: all 13 products + color variants, 6 journal posts, 4
+  FAQ groups, 4 testimonials, 3 delivery options, 2 promo codes.
+- `lib/core/config/supabase_config.dart` holds the project URL and anon
+  (legacy, JWT-based) key — safe to ship client-side by design, scoped
+  entirely by RLS.
 
-**Deliberately not done:** swapping the active repository. 
-`productRepositoryProvider` in `store_provider.dart` still returns
-`MockProductRepository`. Two reasons:
+**App wiring:**
+- `lib/core/data/supabase_product_repository.dart` —
+  `SupabaseProductRepository implements ProductRepository`, is the active
+  implementation (`productRepositoryProvider` in `store_provider.dart`).
+- `main.dart` calls `Supabase.initialize()`, then `loadLiveCatalog()`
+  (`product_repository.dart`) before `runApp()`. That function fetches
+  live products/collections and **mutates** `mockProducts`/
+  `productCollections` in place (`clear()` + `addAll()`) rather than
+  reassigning them — every widget across the ~14 files that read those
+  `final` lists directly (`ShopPage`, `ProductDetailPage`, cart, checkout,
+  search, account/orders, collections, etc.) already holds a reference to
+  the same list object, so this made the whole catalog live without
+  touching a single one of those call sites. If the fetch fails or times
+  out (8s), the bundled mock data is left in place so the app still
+  renders instead of going blank — see the function's doc comment for the
+  reasoning.
+- `web/index.html` gained a branded splash screen (`#splash`, removed on
+  the `flutter-first-frame` event). Blocking `runApp()` on a live network
+  fetch means a cold load is blank white for several seconds without it.
 
-1. **No live project to point it at or test against.** Wiring in
-   credentials for a project that doesn't exist, or one I can't verify
-   against, would just move the mock-data problem into a config file
-   instead of solving it.
-2. **The sync/async boundary runs deeper than the repository.** A good
-   chunk of the app reads the catalog synchronously and in-memory —
-   `getProductSync`, `searchProductsSync`, `relatedProductsSync` in
-   `product_repository.dart`, and `StoreState.subtotal` in
-   `store_provider.dart` — because `mockProducts` is a plain in-memory
-   list. Making the repository async-real without converting these call
-   sites (and the widgets that assume synchronous access — `ShopPage`,
-   `ProductDetailPage`, cart line items, checkout summary, order history,
-   search) would either break them or silently leave them on stale/empty
-   data. That's a real, mechanical refactor (repository read → `AsyncNotifier`
-   / `FutureProvider` + loading states throughout), worth doing once,
-   deliberately, against a real project where it can be verified — not as
-   a blind pass with no backend to check it against.
+**Still mock data, not wired to Supabase:** orders, addresses, payment
+methods, account profile, auth (sign-in just flips a local
+`isSignedIn` flag). These are user-scoped and tied to real auth sessions
+that don't exist yet — wiring them blind with no test user would be
+guesswork, not verification.
 
-**Path to finish this**, once a Supabase project exists:
-1. Apply `supabase/schema.sql` (after resolving its two `TODO`s) and seed
-   `products`/`product_color_variants`/`collections`/`journal_posts`/
-   `faq_groups`/`faq_items`/`testimonials`/`delivery_options` from the
-   current `lib/core/data/*.dart` mock files (same shape, straight insert).
-2. Point `supabase_flutter`'s `Supabase.initialize()` at the project (add
-   to `main.dart`) with the anon key.
-3. Swap `productRepositoryProvider` to `SupabaseProductRepository`.
-4. Convert `getProductSync`/`searchProductsSync`/`relatedProductsSync` and
-   `StoreState.subtotal` to go through the repository (async), and update
-   their call sites to handle loading/error states — this is the real work.
-5. Wire `auth_page.dart`'s stubbed `_socialLogin`/`_submit` to
+**Two real bugs this live-wiring surfaced and fixed:**
+1. `.order('bestseller_rank')` in `SupabaseProductRepository.getAll()` —
+   the `postgrest` package defaults `ascending: false` (not `true`, as
+   seems natural), so "bestselling" sort was silently reversed. Now
+   explicit: `.order('bestseller_rank', ascending: true)`.
+2. The default cart seed in `StoreNotifier.build()`
+   (`store_provider.dart`) still referenced `good-shepherd-hoodie` and
+   `psalm-23-tee` — the pre-rename product IDs from before this
+   migration's currency/catalog work (see "Product catalog: renamed to
+   real inventory" below). The cart badge showed "2 items" but the bag
+   itself rendered empty at £0, since `getProductSync` silently returned
+   null for both stale IDs. This bug predates the Supabase wiring — mock
+   data had the exact same broken IDs — the live-data pass just made it
+   visible. Fixed to `saved-hoodie`/`crowned-tee`.
+
+**Path to finish Stage 10 fully:**
+1. Resolve the two `TODO`s in `supabase/schema.sql` (guest order lookup,
+   `place_order` RPC), then wire orders/addresses/payment methods the same
+   repository-backed way as products.
+2. Wire `auth_page.dart`'s stubbed `_socialLogin`/`_submit` to
    `supabase.auth.signInWithPassword` / `signUp` / `signInWithOAuth`
    instead of the current `ref.read(storeProvider.notifier).setSignedIn(true)`.
-6. Replace `CheckoutNotifier.placeOrder()`'s fake-success path with a
-   `place_order` RPC call (see schema TODO).
+3. Replace `CheckoutNotifier.placeOrder()`'s fake-success path with the
+   `place_order` RPC call once it exists.
 
 ## Explicitly out of scope (per original brief)
 

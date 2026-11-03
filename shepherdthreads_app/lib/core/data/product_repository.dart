@@ -60,3 +60,33 @@ List<Product> relatedProductsSync(Product product, {int count = 6}) {
   final rest = mockProducts.where((p) => p.id != product.id && p.category != product.category);
   return [...same, ...rest].take(count).toList();
 }
+
+/// Replaces the contents of `mockProducts`/`productCollections` in place
+/// with live data from [repo], called once at startup (see main.dart).
+///
+/// Mutates in place (`clear()` + `addAll()`) rather than reassigning the
+/// variables — every widget that reads `mockProducts`/`productCollections`
+/// holds a reference to the same `final` list object, so this updates them
+/// everywhere without touching a single call site. On failure (network
+/// error, RLS misconfiguration, etc.) the bundled defaults from
+/// products_data.dart are left in place so the app still renders something
+/// instead of going blank.
+Future<void> loadLiveCatalog(ProductRepository repo) async {
+  try {
+    final products = await repo.getAll().timeout(const Duration(seconds: 8));
+    final collections = await repo.getCollections().timeout(const Duration(seconds: 8));
+    if (products.isNotEmpty) {
+      mockProducts
+        ..clear()
+        ..addAll(products);
+    }
+    if (collections.isNotEmpty) {
+      productCollections
+        ..clear()
+        ..addAll(collections);
+    }
+  } catch (e) {
+    // ignore: avoid_print
+    print('loadLiveCatalog failed, keeping bundled mock data: $e');
+  }
+}

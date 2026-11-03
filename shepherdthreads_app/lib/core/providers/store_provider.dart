@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../data/product_repository.dart';
+import '../data/supabase_product_repository.dart';
 import '../models/commerce.dart';
 
 /// Ported from react-source/src/contexts/StoreContext.tsx as a Riverpod
@@ -65,16 +67,16 @@ class StoreNotifier extends Notifier<StoreState> {
     return StoreState(
       cart: [
         CartItem(
-          key: makeCartKey('good-shepherd-hoodie', 'Black', 'M'),
-          productId: 'good-shepherd-hoodie',
-          color: 'Black',
+          key: makeCartKey('saved-hoodie', 'Grey', 'M'),
+          productId: 'saved-hoodie',
+          color: 'Grey',
           size: 'M',
           qty: 1,
         ),
         CartItem(
-          key: makeCartKey('psalm-23-tee', 'Cream', 'L'),
-          productId: 'psalm-23-tee',
-          color: 'Cream',
+          key: makeCartKey('crowned-tee', 'Black', 'L'),
+          productId: 'crowned-tee',
+          color: 'Black',
           size: 'L',
           qty: 1,
         ),
@@ -162,4 +164,5 @@ class StoreNotifier extends Notifier<StoreState> {
 
 final storeProvider = NotifierProvider<StoreNotifier, StoreState>(StoreNotifier.new);
 
-final productRepositoryProvider = Provider<ProductRepository>((ref) => MockProductRepository());
+final productRepositoryProvider =
+    Provider<ProductRepository>((ref) => SupabaseProductRepository(Supabase.instance.client));
