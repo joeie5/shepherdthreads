@@ -4,6 +4,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/theme/app_theme.dart';
 import '../../shared/widgets/product_card.dart';
+import '../../shared/widgets/site_container.dart';
 
 /// Ported from react-source/src/components/product/ProductCarousel.tsx
 class ProductCarousel extends StatefulWidget {
@@ -37,44 +38,46 @@ class _ProductCarouselState extends State<ProductCarousel> {
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: isDesktop ? 96 : 64),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: hPad),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(widget.title.toUpperCase(),
-                    style: AppTextStyles.sectionHeading().copyWith(fontSize: isDesktop ? 36 : 28)),
-                if (isDesktop)
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _ScrollButton(icon: Icons.chevron_left, onTap: () => _scroll(-1)),
-                      const SizedBox(width: 8),
-                      _ScrollButton(icon: Icons.chevron_right, onTap: () => _scroll(1)),
-                    ],
-                  ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 32),
-          SizedBox(
-            height: 420,
-            child: ListView.separated(
-              controller: _controller,
-              scrollDirection: Axis.horizontal,
+      child: SiteContainer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: hPad),
-              itemCount: widget.products.length,
-              separatorBuilder: (_, _) => SizedBox(width: isDesktop ? 24 : 12),
-              itemBuilder: (context, i) => SizedBox(
-                width: isDesktop ? 260 : MediaQuery.sizeOf(context).width * 0.62,
-                child: ProductCard(product: widget.products[i]),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(widget.title.toUpperCase(),
+                      style: AppTextStyles.sectionHeading().copyWith(fontSize: isDesktop ? 36 : 28)),
+                  if (isDesktop)
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _ScrollButton(icon: Icons.chevron_left, onTap: () => _scroll(-1)),
+                        const SizedBox(width: 8),
+                        _ScrollButton(icon: Icons.chevron_right, onTap: () => _scroll(1)),
+                      ],
+                    ),
+                ],
               ),
             ),
-          ),
-        ],
+            const SizedBox(height: 32),
+            SizedBox(
+              height: 420,
+              child: ListView.separated(
+                controller: _controller,
+                scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.symmetric(horizontal: hPad),
+                itemCount: widget.products.length,
+                separatorBuilder: (_, _) => SizedBox(width: isDesktop ? 24 : 12),
+                itemBuilder: (context, i) => SizedBox(
+                  width: isDesktop ? 260 : MediaQuery.sizeOf(context).width * 0.62,
+                  child: ProductCard(product: widget.products[i]),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

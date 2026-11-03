@@ -8,12 +8,10 @@ import '../../core/theme/app_text_styles.dart';
 import '../../core/utils/currency.dart';
 import 'app_button.dart';
 import 'app_drawer.dart';
+import 'cart_line_item.dart';
+import 'free_shipping_meter.dart';
 
 /// Ported from react-source/src/components/CartDrawer.tsx
-///
-/// Stage 1 renders a simplified line-item row; Stage 5 (Cart & Cart Drawer)
-/// replaces it with the full CartLineItem port (thumbnail, quantity
-/// stepper, save-for-later) ported from CartLineItem.tsx.
 class CartDrawer extends ConsumerWidget {
   const CartDrawer({super.key});
 
@@ -21,6 +19,8 @@ class CartDrawer extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final store = ref.watch(storeProvider);
     final notifier = ref.read(storeProvider.notifier);
+    final lastAdded = store.cart.where((i) => i.key == store.lastAddedKey);
+    final lastProduct = lastAdded.isNotEmpty ? getProductSync(lastAdded.first.productId) : null;
 
     return AppDrawer(
       open: store.isCartOpen,
@@ -28,7 +28,7 @@ class CartDrawer extends ConsumerWidget {
       side: AppDrawerSide.right,
       label: 'Shopping bag',
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
@@ -64,7 +64,7 @@ class CartDrawer extends ConsumerWidget {
                       Text('Your bag is empty', style: AppTextStyles.serif(fontSize: 24)),
                       const SizedBox(height: 8),
                       Text(
-                        'Start with our signature Good Shepherd Hoodie, or browse the full collection.',
+                        'Start with our signature Saved Hoodie, or browse the full collection.',
                         textAlign: TextAlign.center,
                         style: AppTextStyles.sans(fontSize: 14, color: AppColors.stone),
                       ),
@@ -81,41 +81,49 @@ class CartDrawer extends ConsumerWidget {
                 ),
               ),
             )
-          else
+          else ...[
+            if (lastProduct != null)
+              Container(
+                color: AppColors.cream,
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                child: Row(
+                  children: [
+                    const Icon(Icons.check, size: 16, color: AppColors.ink),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: RichText(
+                        text: TextSpan(
+                          style: AppTextStyles.sans(fontSize: 13, color: AppColors.ink),
+                          children: [
+                            TextSpan(
+                                text: lastProduct.name,
+                                style: AppTextStyles.sans(fontSize: 13, fontWeight: FontWeight.w500)),
+                            const TextSpan(text: ' added to your bag'),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              decoration: const BoxDecoration(
+                border: Border(bottom: BorderSide(color: AppColors.hairline)),
+              ),
+              child: FreeShippingMeter(subtotal: store.subtotal),
+            ),
             Expanded(
               child: ListView.separated(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 24),
                 itemCount: store.cart.length,
                 separatorBuilder: (_, _) => const Divider(height: 1),
-                itemBuilder: (context, i) {
-                  final item = store.cart[i];
-                  final product = getProductSync(item.productId);
-                  if (product == null) return const SizedBox.shrink();
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(product.name, style: AppTextStyles.sans(fontSize: 14, fontWeight: FontWeight.w500)),
-                              const SizedBox(height: 4),
-                              Text('${item.color} · ${item.size} · Qty ${item.qty}',
-                                  style: AppTextStyles.sans(fontSize: 13, color: AppColors.stone)),
-                            ],
-                          ),
-                        ),
-                        Text(formatPrice(product.price * item.qty),
-                            style: AppTextStyles.sans(fontSize: 14).copyWith(fontFeatures: const [FontFeature.tabularFigures()])),
-                      ],
-                    ),
-                  );
-                },
+                itemBuilder: (context, i) => CartLineItem(
+                  item: store.cart[i],
+                  onNavigate: notifier.closeCart,
+                ),
               ),
             ),
-          if (store.cart.isNotEmpty)
             Container(
               padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
               decoration: const BoxDecoration(
@@ -126,11 +134,17 @@ class CartDrawer extends ConsumerWidget {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
                     children: [
                       Text('Subtotal', style: AppTextStyles.sans(fontSize: 14)),
-                      Text(formatPrice(store.subtotal), style: AppTextStyles.sans(fontSize: 16, fontWeight: FontWeight.w500)),
+                      Text(formatPrice(store.subtotal),
+                          style: AppTextStyles.sans(fontSize: 16, fontWeight: FontWeight.w500)),
                     ],
                   ),
+                  const SizedBox(height: 4),
+                  Text('Shipping, taxes and promo codes calculated at checkout.',
+                      style: AppTextStyles.sans(fontSize: 12, color: AppColors.stone)),
                   const SizedBox(height: 16),
                   AppButton(
                     label: 'Checkout',
@@ -154,6 +168,7 @@ class CartDrawer extends ConsumerWidget {
                 ],
               ),
             ),
+          ],
         ],
       ),
     );

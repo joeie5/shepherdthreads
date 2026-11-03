@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/theme/app_theme.dart';
+import '../../core/utils/currency.dart';
 import 'app_footer.dart';
 import 'app_header.dart';
 import 'cart_drawer.dart';
@@ -44,7 +45,7 @@ class _AppLayoutState extends State<AppLayout> {
                   color: AppColors.cream,
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: Text(
-                    'Free U.S. shipping over \$150 · Free 30-day returns',
+                    'Free UK shipping over ${formatPrice(freeShippingThreshold)} · Free 30-day returns',
                     textAlign: TextAlign.center,
                     style: AppTextStyles.sans(fontSize: 11, letterSpacing: 0.6),
                   ),

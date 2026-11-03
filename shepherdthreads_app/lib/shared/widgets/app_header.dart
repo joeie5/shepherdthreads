@@ -7,6 +7,7 @@ import '../../core/theme/app_text_styles.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/constants/nav_data.dart';
 import 'logo.dart';
+import 'site_container.dart';
 
 /// Ported from react-source/src/components/Header.tsx
 
@@ -14,8 +15,14 @@ class AppHeader extends ConsumerWidget implements PreferredSizeWidget {
   final VoidCallback onOpenMenu;
   const AppHeader({super.key, required this.onOpenMenu});
 
+  // Grown from the original 72/64 to fit the larger landscape logo
+  // (170px wide ≈ 85px tall) with comfortable margin — see AppLayout's
+  // heroHeight calc, which depends on this value too.
+  static const double desktopHeight = 104;
+  static const double mobileHeight = 96;
+
   @override
-  Size get preferredSize => const Size.fromHeight(72);
+  Size get preferredSize => const Size.fromHeight(desktopHeight);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,8 +34,9 @@ class AppHeader extends ConsumerWidget implements PreferredSizeWidget {
       color: AppColors.ink,
       child: SafeArea(
         bottom: false,
-        child: SizedBox(
-          height: isDesktop ? 72 : 64,
+        child: SiteContainer(
+          child: SizedBox(
+          height: isDesktop ? desktopHeight : mobileHeight,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: isDesktop ? 32 : 16),
             child: Row(
@@ -42,26 +50,21 @@ class AppHeader extends ConsumerWidget implements PreferredSizeWidget {
                           icon: const Icon(Icons.menu, color: AppColors.white, size: 20),
                         ),
                       if (isDesktop)
-                        Flexible(
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            physics: const ClampingScrollPhysics(),
-                            child: Row(
-                              children: primaryNav
-                                  .map((item) => Padding(
-                                        padding: const EdgeInsets.only(right: 32),
-                                        child: _NavLink(item: item, active: currentPath == item.to),
-                                      ))
-                                  .toList(),
-                            ),
-                          ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            for (var i = 0; i < primaryNav.length; i++) ...[
+                              if (i > 0) const SizedBox(width: 32),
+                              _NavLink(item: primaryNav[i], active: currentPath == primaryNav[i].to),
+                            ],
+                          ],
                         ),
                     ],
                   ),
                 ),
                 InkWell(
                   onTap: () => context.go('/'),
-                  child: const Logo(showTagline: false, color: AppColors.white),
+                  child: const Logo(color: AppColors.white),
                 ),
                 Expanded(
                   child: Row(
@@ -116,12 +119,21 @@ class AppHeader extends ConsumerWidget implements PreferredSizeWidget {
               ],
             ),
           ),
+          ),
         ),
       ),
     );
   }
 }
 
+/// Active state is `underline decoration-brass decoration-1
+/// underline-offset-[10px]` in Header.tsx — a thin brass rule under the
+/// text. Uses TextStyle's native underline rather than a manually
+/// IntrinsicWidth-measured bar: that approach turned out fragile (a
+/// zero-width Container inside an IntrinsicWidth Column corrupted the whole
+/// nav row's measured width, making every label wrap character-by-character
+/// — the actual cause of the nav "truncation" bug, not FittedBox as
+/// originally suspected).
 class _NavLink extends StatelessWidget {
   final NavItem item;
   final bool active;
@@ -129,18 +141,20 @@ class _NavLink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final baseStyle = AppTextStyles.navLabel(color: active ? AppColors.white : AppColors.white65);
     return InkWell(
       onTap: () => context.go(item.to),
-      child: Container(
+      child: Padding(
         padding: const EdgeInsets.only(bottom: 10),
-        decoration: active
-            ? const BoxDecoration(
-                border: Border(bottom: BorderSide(color: AppColors.brass, width: 1)),
-              )
-            : null,
         child: Text(
           item.label.toUpperCase(),
-          style: AppTextStyles.navLabel(color: active ? AppColors.white : AppColors.white65),
+          style: active
+              ? baseStyle.copyWith(
+                  decoration: TextDecoration.underline,
+                  decorationColor: AppColors.brass,
+                  decorationThickness: 1.5,
+                )
+              : baseStyle,
         ),
       ),
     );

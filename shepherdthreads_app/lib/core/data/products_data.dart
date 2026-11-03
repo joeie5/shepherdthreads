@@ -7,6 +7,11 @@ import '../models/product.dart';
 
 const _apparelSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
+// Real size runs for the photographed products, from the actual size chart
+// (not the original mock's generic XS–XXL run).
+const _realSizes = ['S', 'M', 'L', 'XL', '2XL']; // Identity Shorts, Saved Joggers, Saved Hoodie
+const _realSizesWith3xl = ['S', 'M', 'L', 'XL', '2XL', '3XL']; // Identity Polo, Crowned T-Shirt
+
 const _heavyCare = [
   'Machine wash cold, inside out, with like colors',
   'Tumble dry low or hang to dry',
@@ -57,8 +62,7 @@ final mockProducts = <Product>[
         images: [AppImages.savedHoodieFrontMediumBlue, AppImages.savedHoodieBackMediumBlue],
       ),
     ],
-    sizes: _apparelSizes,
-    soldOutSizes: const ['XS'],
+    sizes: _realSizes,
     bestsellerRank: 1,
     addedOn: '2026-09-02',
     details: const [
@@ -95,7 +99,7 @@ final mockProducts = <Product>[
         images: [AppImages.crownedTeeFrontLightApricot],
       ),
     ],
-    sizes: _apparelSizes,
+    sizes: _realSizesWith3xl,
     bestsellerRank: 2,
     addedOn: '2026-08-14',
     details: const [
@@ -268,36 +272,41 @@ final mockProducts = <Product>[
       // Only a back shot exists for this colorway — no front image to show yet.
       const ColorVariant(name: 'Grey', hex: '#8C8C88', images: [AppImages.savedJoggersBackGrey]),
     ],
-    sizes: _apparelSizes,
+    sizes: _realSizes,
     bestsellerRank: 10,
     addedOn: '2026-09-12',
     details: const ['Straight leg, elastic waist with drawcord', 'Side pockets', 'Printed leg graphic'],
     fabric: '100% organic cotton, brushed fleece.',
     care: _heavyCare,
   ),
-  // Real product — "Identity Polo £21.40" from Stock Inventory.txt. No
-  // photography yet — placeholder images until supplied.
+  // Real product — "Identity Polo £21.40" from Stock Inventory.txt.
   Product(
     id: 'identity-polo',
     name: 'Identity Polo',
-    subtitle: 'Pique Polo Shirt',
+    subtitle: 'Piped Pique Polo',
     price: 21.40,
     category: ProductCategory.tees,
     collection: CollectionId.essentials,
     description:
-        'A clean pique polo for anywhere a tee won’t do — smart enough for church, relaxed enough for everywhere else.',
-    colors: [
-      ColorVariant(name: 'Black', hex: '#0A0A0A', images: [AppImages.identityPolo]),
+        'A clean pique polo with contrast white piping and collar, printed "Child of God" across the back — smart enough for church, relaxed enough for everywhere else.',
+    verse: const VerseRef(
+        text: 'So you are no longer a slave, but a son, and if a son, then an heir through God.',
+        reference: 'Galatians 3:26'),
+    colors: const [
+      ColorVariant(
+        name: 'Black',
+        hex: '#0A0A0A',
+        images: [AppImages.identityPoloFrontBlack, AppImages.identityPoloBackBlack],
+      ),
     ],
-    sizes: _apparelSizes,
+    sizes: _realSizesWith3xl,
     bestsellerRank: 12,
     addedOn: '2026-10-30',
-    details: const ['Ribbed polo collar', 'Three-button placket', 'Side vents'],
+    details: const ['Ribbed polo collar with contrast piping', 'Three-button placket', '"Child of God" back print'],
     fabric: '100% cotton pique.',
     care: _heavyCare,
   ),
-  // Real product — "Identity Shorts £27.60" from Stock Inventory.txt. No
-  // photography yet — placeholder images until supplied.
+  // Real product — "Identity Shorts £27.60" from Stock Inventory.txt.
   Product(
     id: 'identity-shorts',
     name: 'Identity Shorts',
@@ -306,10 +315,14 @@ final mockProducts = <Product>[
     category: ProductCategory.bottoms,
     collection: CollectionId.essentials,
     description: 'A relaxed fleece short cut from the same fabric as our joggers, for warmer days set apart.',
-    colors: [
-      ColorVariant(name: 'Grey', hex: '#8C8C88', images: [AppImages.identityShorts]),
+    colors: const [
+      ColorVariant(
+        name: 'Black',
+        hex: '#0A0A0A',
+        images: [AppImages.identityShortsFrontBlack, AppImages.identityShortsBackBlack],
+      ),
     ],
-    sizes: _apparelSizes,
+    sizes: _realSizes,
     bestsellerRank: 13,
     addedOn: '2026-10-30',
     details: const ['Elastic waist with drawcord', 'Side pockets'],

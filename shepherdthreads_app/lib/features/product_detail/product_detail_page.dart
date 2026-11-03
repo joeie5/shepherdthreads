@@ -13,6 +13,7 @@ import '../../shared/widgets/app_button.dart';
 import '../../shared/widgets/app_image.dart';
 import '../../shared/widgets/color_swatches.dart';
 import '../../shared/widgets/price_text.dart';
+import '../../shared/widgets/site_container.dart';
 import '../../shared/widgets/size_guide_modal.dart';
 import 'product_carousel.dart';
 import 'product_gallery.dart';
@@ -96,7 +97,7 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (product.isNew)
-            Text('NEW THIS SEASON', style: AppTextStyles.sans(fontSize: 12, letterSpacing: 1.2, color: AppColors.stone)),
+            Text('New this season', style: AppTextStyles.sans(fontSize: 12, letterSpacing: 1.2, color: AppColors.stone)),
           const SizedBox(height: 4),
           Text(product.name, style: AppTextStyles.serif(fontSize: isDesktop ? 40 : 32)),
           const SizedBox(height: 4),
@@ -310,45 +311,48 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Padding(
-                padding: EdgeInsets.fromLTRB(hPad, isDesktop ? 24 : 0, hPad, 0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    if (isDesktop)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
-                        child: Wrap(
-                          children: [
-                            _CrumbLink(label: 'Home', onTap: () => context.go('/')),
-                            _crumbSep(),
-                            _CrumbLink(label: 'Shop', onTap: () => context.go('/shop')),
-                            _crumbSep(),
-                            _CrumbLink(
-                                label: product.category.label,
-                                onTap: () => context.go('/shop?category=${product.category.label}')),
-                            _crumbSep(),
-                            Text(product.name, style: AppTextStyles.sans(fontSize: 12, color: AppColors.ink)),
-                          ],
-                        ),
-                      ),
-                    isDesktop
-                        ? Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                padding: EdgeInsets.fromLTRB(0, isDesktop ? 24 : 0, 0, 0),
+                child: SiteContainer(
+                  padding: EdgeInsets.symmetric(horizontal: hPad),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      if (isDesktop)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: Wrap(
                             children: [
-                              Expanded(flex: 6, child: gallery),
-                              const SizedBox(width: 48),
-                              Expanded(flex: 5, child: details),
-                            ],
-                          )
-                        : Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              gallery,
-                              const SizedBox(height: 24),
-                              details,
+                              _CrumbLink(label: 'Home', onTap: () => context.go('/')),
+                              _crumbSep(),
+                              _CrumbLink(label: 'Shop', onTap: () => context.go('/shop')),
+                              _crumbSep(),
+                              _CrumbLink(
+                                  label: product.category.label,
+                                  onTap: () => context.go('/shop?category=${product.category.label}')),
+                              _crumbSep(),
+                              Text(product.name, style: AppTextStyles.sans(fontSize: 12, color: AppColors.ink)),
                             ],
                           ),
-                  ],
+                        ),
+                      isDesktop
+                          ? Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(flex: 6, child: gallery),
+                                const SizedBox(width: 48),
+                                Expanded(flex: 5, child: details),
+                              ],
+                            )
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                gallery,
+                                const SizedBox(height: 24),
+                                details,
+                              ],
+                            ),
+                    ],
+                  ),
                 ),
               ),
               Container(

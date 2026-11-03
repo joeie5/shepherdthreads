@@ -70,9 +70,14 @@ class _PositionedPanel extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.sizeOf(context);
     final isBottom = side == AppDrawerSide.bottom;
-    final panelWidth = isBottom
-        ? double.infinity
-        : (screenSize.width < 440 ? screenSize.width * 0.88 : 440.0);
+    // Matches Drawer.tsx exactly: right side is `w-full max-w-[440px]`
+    // (full width capped at 440), left side is `w-[88%] max-w-[400px]`
+    // (88% of viewport capped at 400) — the two caps differ.
+    final panelWidth = switch (side) {
+      AppDrawerSide.right => screenSize.width < 440 ? screenSize.width : 440.0,
+      AppDrawerSide.left => (screenSize.width * 0.88).clamp(0.0, 400.0),
+      AppDrawerSide.bottom => double.infinity,
+    };
 
     Widget panel = Semantics(
       label: label,

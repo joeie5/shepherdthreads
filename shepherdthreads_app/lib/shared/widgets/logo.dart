@@ -82,16 +82,24 @@ class Logo extends StatelessWidget {
   final Color color;
   const Logo({super.key, this.showTagline = true, this.color = AppColors.ink});
 
-  /// The real brand asset (assets/images/logo.png) is a flat PNG with a
-  /// black background baked in, so it only reads correctly on the ink/dark
-  /// surfaces this app places the logo on. On any other color this falls
-  /// back to the hand-drawn mark + typeset wordmark.
+  /// Natural pixel size of assets/images/logo-landscape.png (1774×887) — a
+  /// horizontal lockup (mark + "Shepherds Thread" + tagline side by side)
+  /// purpose-built for navbar use, unlike the tall stacked assets/images/logo.png.
+  /// Locked explicitly rather than relying on a single `height` constraint
+  /// on Image, so sizing is deterministic.
+  static const double _landscapeAspect = 1774 / 887;
+
   bool get _useBrandAsset => color == AppColors.white;
 
   @override
   Widget build(BuildContext context) {
     if (_useBrandAsset) {
-      return Image.asset(AppImages.logo, height: 52, fit: BoxFit.contain);
+      const width = 150.0;
+      return SizedBox(
+        width: width,
+        height: width / _landscapeAspect,
+        child: Image.asset(AppImages.logoLandscape, fit: BoxFit.contain),
+      );
     }
 
     return Row(

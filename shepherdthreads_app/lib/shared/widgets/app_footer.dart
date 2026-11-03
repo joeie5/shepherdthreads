@@ -7,6 +7,7 @@ import '../../core/theme/app_theme.dart';
 import 'brand_icons.dart';
 import 'logo.dart';
 import 'newsletter_form.dart';
+import 'site_container.dart';
 
 /// Ported from react-source/src/components/Footer.tsx
 
@@ -75,7 +76,8 @@ class AppFooter extends StatelessWidget {
 
     return Container(
       color: AppColors.ink,
-      child: Padding(
+      child: SiteContainer(
+        child: Padding(
         padding: EdgeInsets.fromLTRB(isDesktop ? 32 : 20, isDesktop ? 80 : 64, isDesktop ? 32 : 20, 40),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,6 +141,7 @@ class AppFooter extends StatelessWidget {
                     ),
             ),
           ],
+        ),
         ),
       ),
     );

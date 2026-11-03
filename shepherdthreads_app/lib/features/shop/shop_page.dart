@@ -9,6 +9,7 @@ import '../../core/theme/app_theme.dart';
 import '../../shared/widgets/app_button.dart';
 import '../../shared/widgets/app_drawer.dart';
 import '../../shared/widgets/product_card.dart';
+import '../../shared/widgets/site_container.dart';
 import 'filter_panel.dart';
 import 'pagination_widget.dart';
 import 'shop_filters.dart';
@@ -58,40 +59,45 @@ class _ShopPageState extends ConsumerState<ShopPage> {
           children: [
             Container(
               color: AppColors.cream,
-              padding: EdgeInsets.fromLTRB(hPad, isDesktop ? 64 : 48, hPad, isDesktop ? 64 : 48),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    children: [
-                      _CrumbLink(label: 'Home', onTap: () => context.go('/')),
-                      Text(' / ', style: AppTextStyles.sans(fontSize: 12, color: AppColors.stone)),
-                      activeCollection != null
-                          ? _CrumbLink(label: 'Collections', onTap: () => context.go('/collections'))
-                          : Text('Shop', style: AppTextStyles.sans(fontSize: 12, color: AppColors.stone)),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    (activeCollection?.name ?? 'Shop All').toUpperCase(),
-                    style: AppTextStyles.sectionHeading().copyWith(fontSize: isDesktop ? 52 : 36),
-                  ),
-                  const SizedBox(height: 12),
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 560),
-                    child: Text(
-                      activeCollection?.description ??
-                          'Heavyweight essentials, made to be worn for years. Every piece carries a quiet reminder.',
-                      style: AppTextStyles.sans(fontSize: 15, color: AppColors.ink65),
+              padding: EdgeInsets.symmetric(vertical: isDesktop ? 64 : 48),
+              child: SiteContainer(
+                padding: EdgeInsets.symmetric(horizontal: hPad),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        _CrumbLink(label: 'Home', onTap: () => context.go('/')),
+                        Text(' / ', style: AppTextStyles.sans(fontSize: 12, color: AppColors.stone)),
+                        activeCollection != null
+                            ? _CrumbLink(label: 'Collections', onTap: () => context.go('/collections'))
+                            : Text('Shop', style: AppTextStyles.sans(fontSize: 12, color: AppColors.stone)),
+                      ],
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 16),
+                    Text(
+                      (activeCollection?.name ?? 'Shop All').toUpperCase(),
+                      style: AppTextStyles.sectionHeading().copyWith(fontSize: isDesktop ? 52 : 36),
+                    ),
+                    const SizedBox(height: 12),
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 560),
+                      child: Text(
+                        activeCollection?.description ??
+                            'Heavyweight essentials, made to be worn for years. Every piece carries a quiet reminder.',
+                        style: AppTextStyles.sans(fontSize: 15, color: AppColors.ink65),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.fromLTRB(hPad, 32, hPad, isDesktop ? 80 : 56),
-              child: Column(
+              padding: EdgeInsets.fromLTRB(0, 32, 0, isDesktop ? 80 : 56),
+              child: SiteContainer(
+                padding: EdgeInsets.symmetric(horizontal: hPad),
+                child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Container(
@@ -168,6 +174,7 @@ class _ShopPageState extends ConsumerState<ShopPage> {
                           notifier: notifier,
                         ),
                 ],
+              ),
               ),
             ),
           ],

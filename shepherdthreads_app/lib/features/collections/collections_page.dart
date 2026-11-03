@@ -7,6 +7,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/theme/app_theme.dart';
 import '../../shared/widgets/app_image.dart';
+import '../../shared/widgets/site_container.dart';
 
 /// Ported from react-source/src/pages/Collections.tsx
 
@@ -29,47 +30,53 @@ class CollectionsPage extends StatelessWidget {
       children: [
         Container(
           color: AppColors.ink,
-          padding: EdgeInsets.fromLTRB(hPad, isDesktop ? 96 : 64, hPad, isDesktop ? 96 : 64),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'COLLECTIONS',
-                style: AppTextStyles.sectionHeading(color: AppColors.white)
-                    .copyWith(fontSize: isDesktop ? 64 : 40),
-              ),
-              const SizedBox(height: 16),
-              ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 480),
-                child: Text(
-                  'Three small, considered collections — each rooted in a passage we keep returning to.',
-                  style: AppTextStyles.sans(fontSize: 15, color: AppColors.white65),
+          padding: EdgeInsets.symmetric(vertical: isDesktop ? 96 : 64),
+          child: SiteContainer(
+            padding: EdgeInsets.symmetric(horizontal: hPad),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'COLLECTIONS',
+                  style: AppTextStyles.sectionHeading(color: AppColors.white)
+                      .copyWith(fontSize: isDesktop ? 64 : 40),
                 ),
-              ),
-            ],
+                const SizedBox(height: 16),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 480),
+                  child: Text(
+                    'Three small, considered collections — each rooted in a passage we keep returning to.',
+                    style: AppTextStyles.sans(fontSize: 15, color: AppColors.white65),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         Padding(
-          padding: EdgeInsets.fromLTRB(hPad, isDesktop ? 96 : 64, hPad, isDesktop ? 96 : 64),
-          child: isDesktop
-              ? Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: productCollections
-                      .map((c) => Expanded(child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            child: _CollectionCard(collection: c),
-                          )))
-                      .toList(),
-                )
-              : Column(
-                  children: productCollections
-                      .map((c) => Padding(
-                            padding: const EdgeInsets.only(bottom: 48),
-                            child: _CollectionCard(collection: c),
-                          ))
-                      .toList(),
-                ),
+          padding: EdgeInsets.symmetric(vertical: isDesktop ? 96 : 64),
+          child: SiteContainer(
+            padding: EdgeInsets.symmetric(horizontal: hPad),
+            child: isDesktop
+                ? Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: productCollections
+                        .map((c) => Expanded(child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 12),
+                              child: _CollectionCard(collection: c),
+                            )))
+                        .toList(),
+                  )
+                : Column(
+                    children: productCollections
+                        .map((c) => Padding(
+                              padding: const EdgeInsets.only(bottom: 48),
+                              child: _CollectionCard(collection: c),
+                            ))
+                        .toList(),
+                  ),
+          ),
         ),
       ],
     );

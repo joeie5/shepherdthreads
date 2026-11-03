@@ -7,10 +7,12 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/theme/app_theme.dart';
 import '../../shared/widgets/app_button.dart';
+import '../../shared/widgets/app_header.dart';
 import '../../shared/widgets/app_image.dart';
 import '../../shared/widgets/newsletter_form.dart';
 import '../../shared/widgets/product_card.dart';
 import '../../shared/widgets/section_heading.dart';
+import '../../shared/widgets/site_container.dart';
 
 /// Ported from react-source/src/pages/Home.tsx
 
@@ -30,181 +32,237 @@ class HomePage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _Hero(isDesktop: isDesktop, hPad: hPad),
+        const _Hero(),
         Container(
           color: AppColors.white,
-          padding: EdgeInsets.symmetric(horizontal: hPad, vertical: isDesktop ? 96 : 64),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SectionHeading(
-                title: 'Shop the Collection',
-                description: 'Our most-worn pieces this season.',
-                linkLabel: 'View all',
-                linkTo: '/shop',
-              ),
-              const SizedBox(height: 40),
-              _ProductGrid(products: featured, isDesktop: isDesktop),
-            ],
+          padding: EdgeInsets.symmetric(vertical: isDesktop ? 96 : 64),
+          child: SiteContainer(
+            padding: EdgeInsets.symmetric(horizontal: hPad),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SectionHeading(
+                  title: 'Shop the Collection',
+                  description: 'Our most-worn pieces this season.',
+                  linkLabel: 'View all',
+                  linkTo: '/shop',
+                ),
+                const SizedBox(height: 40),
+                _ProductGrid(products: featured, isDesktop: isDesktop),
+              ],
+            ),
           ),
         ),
         Container(
           color: AppColors.cream,
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: isDesktop ? 112 : 80),
+          padding: EdgeInsets.symmetric(vertical: isDesktop ? 112 : 80),
           child: Center(
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 820),
-              child: Column(
-                children: [
-                  Text(
-                    'We make garments the way we hope to live — slowly, honestly, and for the good of others.',
-                    textAlign: TextAlign.center,
-                    style: AppTextStyles.serif(fontSize: isDesktop ? 44 : 28, height: 1.3),
-                  ),
-                  const SizedBox(height: 40),
-                  InkWell(
-                    onTap: () => context.go('/our-story'),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'READ OUR STORY',
-                          style: AppTextStyles.buttonLabel(color: AppColors.ink)
-                              .copyWith(decoration: TextDecoration.underline),
-                        ),
-                        const SizedBox(width: 8),
-                        const Icon(Icons.arrow_forward, size: 16, color: AppColors.ink),
-                      ],
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    Text(
+                      'We make garments the way we hope to live — slowly, honestly, and for the good of others.',
+                      textAlign: TextAlign.center,
+                      style: AppTextStyles.serif(fontSize: isDesktop ? 44 : 28, height: 1.3),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 40),
+                    InkWell(
+                      onTap: () => context.go('/our-story'),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'READ OUR STORY',
+                            style: AppTextStyles.buttonLabel(color: AppColors.ink)
+                                .copyWith(decoration: TextDecoration.underline),
+                          ),
+                          const SizedBox(width: 8),
+                          const Icon(Icons.arrow_forward, size: 16, color: AppColors.ink),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ),
         Container(
           color: AppColors.ink,
-          padding: EdgeInsets.symmetric(horizontal: hPad, vertical: isDesktop ? 96 : 64),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SectionHeading(
-                title: 'Green Pastures',
-                description: 'The Fall ’26 lookbook. Shot at dawn outside Asheville, North Carolina.',
-                linkLabel: 'View the journal',
-                linkTo: '/journal',
-                dark: true,
-              ),
-              const SizedBox(height: 40),
-              _Lookbook(isDesktop: isDesktop),
-            ],
+          padding: EdgeInsets.symmetric(vertical: isDesktop ? 96 : 64),
+          child: SiteContainer(
+            padding: EdgeInsets.symmetric(horizontal: hPad),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SectionHeading(
+                  title: 'Green Pastures',
+                  description: 'The Fall ’26 lookbook. Shot at dawn outside Asheville, North Carolina.',
+                  linkLabel: 'View the journal',
+                  linkTo: '/journal',
+                  dark: true,
+                ),
+                const SizedBox(height: 40),
+                _Lookbook(isDesktop: isDesktop),
+              ],
+            ),
           ),
         ),
         Container(
           color: AppColors.white,
           padding: EdgeInsets.symmetric(vertical: isDesktop ? 96 : 64),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: hPad),
-                child: const SectionHeading(
-                  title: 'As Worn by the Community',
-                  description:
-                      'Share yours with #WornWithPurpose — we feature a new story every week.',
+          child: SiteContainer(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: hPad),
+                  child: const SectionHeading(
+                    title: 'As Worn by the Community',
+                    description:
+                        'Share yours with #WornWithPurpose — we feature a new story every week.',
+                  ),
                 ),
-              ),
-              const SizedBox(height: 40),
-              _TestimonialsRow(isDesktop: isDesktop, hPad: hPad),
-            ],
+                const SizedBox(height: 40),
+                _TestimonialsRow(isDesktop: isDesktop, hPad: hPad),
+              ],
+            ),
           ),
         ),
         Container(
           color: AppColors.ink,
-          padding: EdgeInsets.symmetric(horizontal: hPad, vertical: isDesktop ? 96 : 64),
-          child: isDesktop
-              ? Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(child: _NewsletterBandText()),
-                    const SizedBox(width: 48),
-                    Expanded(child: _NewsletterBandForm()),
-                  ],
-                )
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    _NewsletterBandText(),
-                    const SizedBox(height: 32),
-                    _NewsletterBandForm(),
-                  ],
-                ),
+          padding: EdgeInsets.symmetric(vertical: isDesktop ? 96 : 64),
+          child: SiteContainer(
+            padding: EdgeInsets.symmetric(horizontal: hPad),
+            child: isDesktop
+                ? Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(child: _NewsletterBandText()),
+                      const SizedBox(width: 48),
+                      Expanded(child: _NewsletterBandForm()),
+                    ],
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _NewsletterBandText(),
+                      const SizedBox(height: 32),
+                      _NewsletterBandForm(),
+                    ],
+                  ),
+          ),
         ),
       ],
     );
   }
 }
 
+/// Ported from the hero `<section>` in Home.tsx:
+/// ```
+/// <div className="mx-auto grid max-w-site md:min-h-[calc(100vh-108px)] md:grid-cols-2">
+///   <div className="relative order-1 aspect-[4/5] md:order-2 md:aspect-auto">
+///     <img ... className="absolute inset-0 h-full w-full object-cover" />
+///   </div>
+///   <div className="... md:justify-center md:px-12 md:py-20 lg:px-20">
+/// ```
+/// Three things React does here that are easy to miss porting by eye:
+/// the headline has a *third* breakpoint (`lg:text-[88px]`, 1024px+, not
+/// just `md:`), the hero image drops its 4:5 aspect ratio on desktop in
+/// favor of filling the section's height via `object-cover`, and that
+/// section height itself is `100vh - 108px` (header + announcement bar) —
+/// not any fixed/aspect-driven value.
 class _Hero extends StatelessWidget {
-  final bool isDesktop;
-  final double hPad;
-  const _Hero({required this.isDesktop, required this.hPad});
+  const _Hero();
 
   @override
   Widget build(BuildContext context) {
-    final image = AspectRatio(
-      aspectRatio: 4 / 5,
-      child: AppImage(AppImages.hero),
+    final size = MediaQuery.sizeOf(context);
+    final isDesktop = AppBreakpoints.isDesktop(size.width);
+    final isLargeDesktop = AppBreakpoints.isLargeDesktop(size.width);
+
+    final headlineSize = isLargeDesktop ? 88.0 : (isDesktop ? 72.0 : 48.0);
+    final textHPad = isLargeDesktop ? 80.0 : (isDesktop ? 48.0 : 20.0);
+
+    final image = AppImage(AppImages.hero);
+
+    final textContent = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text('Fall 2026 — The Good Shepherd Collection',
+            style: AppTextStyles.sans(fontSize: 12, letterSpacing: 1.7, color: AppColors.white60)),
+        const SizedBox(height: 20),
+        Text(
+          'Clothed in\npurpose.',
+          style: AppTextStyles.serif(fontSize: headlineSize, height: 1.02, color: AppColors.white),
+        ),
+        const SizedBox(height: 24),
+        ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 420),
+          child: Text(
+            'Heavyweight essentials made slowly and worn with conviction. Quiet on the outside, rooted on the inside.',
+            style: AppTextStyles.sans(fontSize: 16, height: 1.6, color: AppColors.white70),
+          ),
+        ),
+        const SizedBox(height: 40),
+        AppButton(
+          label: 'Shop the collection',
+          variant: AppButtonVariant.inverse,
+          size: AppButtonSize.lg,
+          onPressed: () => context.go('/shop'),
+        ),
+      ],
     );
 
-    final text = Padding(
-      padding: EdgeInsets.fromLTRB(hPad, isDesktop ? 0 : 40, hPad, isDesktop ? 0 : 56),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: isDesktop ? MainAxisAlignment.center : MainAxisAlignment.end,
-        children: [
-          Text('FALL 2026 — THE GOOD SHEPHERD COLLECTION',
-              style: AppTextStyles.sans(fontSize: 12, letterSpacing: 1.7, color: AppColors.white60)),
-          const SizedBox(height: 20),
-          Text(
-            'Clothed in\npurpose.',
-            style: AppTextStyles.serif(fontSize: isDesktop ? 80 : 48, height: 1.02, color: AppColors.white),
+    if (!isDesktop) {
+      return ColoredBox(
+        color: AppColors.ink,
+        child: SiteContainer(
+          child: Column(
+            children: [
+              AspectRatio(aspectRatio: 4 / 5, child: image),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 40, 20, 56),
+                child: textContent,
+              ),
+            ],
           ),
-          const SizedBox(height: 24),
-          ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 420),
-            child: Text(
-              'Heavyweight essentials made slowly and worn with conviction. Quiet on the outside, rooted on the inside.',
-              style: AppTextStyles.sans(fontSize: 16, height: 1.6, color: AppColors.white70),
-            ),
-          ),
-          const SizedBox(height: 40),
-          AppButton(
-            label: 'Shop the collection',
-            variant: AppButtonVariant.inverse,
-            size: AppButtonSize.lg,
-            onPressed: () => context.go('/shop'),
-          ),
-        ],
-      ),
-    );
+        ),
+      );
+    }
+
+    // Originally React's hardcoded `calc(100vh - 108px)` (72px header +
+    // ~36px announcement bar); the header has since grown to fit the larger
+    // logo (AppHeader.desktopHeight), so this is recomputed from that
+    // instead of staying pinned to the original hardcoded 108.
+    final heroHeight =
+        (size.height - AppHeader.desktopHeight - 36).clamp(480.0, double.infinity);
 
     return ColoredBox(
       color: AppColors.ink,
-      child: isDesktop
-          ? IntrinsicHeight(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Expanded(child: text),
-                  Expanded(child: image),
-                ],
+      child: SiteContainer(
+        child: SizedBox(
+          height: heroHeight,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: Center(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: textHPad),
+                    child: textContent,
+                  ),
+                ),
               ),
-            )
-          : Column(
-              children: [image, text],
-            ),
+              Expanded(child: ClipRect(child: image)),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
