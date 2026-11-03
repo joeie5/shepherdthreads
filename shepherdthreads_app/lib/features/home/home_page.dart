@@ -91,27 +91,6 @@ class HomePage extends StatelessWidget {
           ),
         ),
         Container(
-          color: AppColors.ink,
-          padding: EdgeInsets.symmetric(vertical: isDesktop ? 96 : 64),
-          child: SiteContainer(
-            padding: EdgeInsets.symmetric(horizontal: hPad),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SectionHeading(
-                  title: 'Green Pastures',
-                  description: 'The Fall ’26 lookbook. Shot at dawn outside Asheville, North Carolina.',
-                  linkLabel: 'View the journal',
-                  linkTo: '/journal',
-                  dark: true,
-                ),
-                const SizedBox(height: 40),
-                _Lookbook(isDesktop: isDesktop),
-              ],
-            ),
-          ),
-        ),
-        Container(
           color: AppColors.white,
           padding: EdgeInsets.symmetric(vertical: isDesktop ? 96 : 64),
           child: SiteContainer(
@@ -286,91 +265,6 @@ class _ProductGrid extends StatelessWidget {
         childAspectRatio: 0.62,
       ),
       itemBuilder: (context, i) => ProductCard(product: products[i]),
-    );
-  }
-}
-
-class _Lookbook extends StatelessWidget {
-  final bool isDesktop;
-  const _Lookbook({required this.isDesktop});
-
-  @override
-  Widget build(BuildContext context) {
-    final big = _LookbookFigure(
-      image: AppImages.lookbookField,
-      caption: 'Psalm 23 Tee in Black · Narrow Path Long Sleeve',
-      aspectRatio: isDesktop ? null : 4 / 5,
-    );
-    final steps = _LookbookFigure(
-      image: AppImages.lookbookSteps,
-      caption: 'Good Shepherd Hoodie in Bone',
-      aspectRatio: 16 / 10,
-    );
-    final detail = _LookbookFigure(
-      image: AppImages.lookbookDetail,
-      caption: 'Every stitch, on purpose.',
-      aspectRatio: 16 / 10,
-    );
-
-    if (!isDesktop) {
-      return Column(
-        children: [
-          big,
-          const SizedBox(height: 12),
-          steps,
-          const SizedBox(height: 12),
-          detail,
-        ],
-      );
-    }
-
-    return SizedBox(
-      height: 720,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(flex: 7, child: big),
-          const SizedBox(width: 16),
-          Expanded(
-            flex: 5,
-            child: Column(
-              children: [
-                Expanded(child: steps),
-                const SizedBox(height: 16),
-                Expanded(child: detail),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _LookbookFigure extends StatelessWidget {
-  final String image;
-  final String caption;
-  final double? aspectRatio;
-  const _LookbookFigure({required this.image, required this.caption, this.aspectRatio});
-
-  @override
-  Widget build(BuildContext context) {
-    final content = Stack(
-      fit: StackFit.expand,
-      children: [
-        AppImage(image),
-        Positioned(
-          left: 0,
-          bottom: 0,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Text(caption, style: AppTextStyles.sans(fontSize: 13, color: AppColors.white85)),
-          ),
-        ),
-      ],
-    );
-    return ClipRect(
-      child: aspectRatio != null ? AspectRatio(aspectRatio: aspectRatio!, child: content) : content,
     );
   }
 }

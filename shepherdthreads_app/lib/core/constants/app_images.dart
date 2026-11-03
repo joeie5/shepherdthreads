@@ -1,7 +1,8 @@
-/// Placeholder image URLs standing in for the React source's
-/// `data/images.ts`, whose referenced files (Magic Patterns-hosted) were not
-/// included in the exported project. Swap these for real product photography
-/// before launch — see MIGRATION_NOTES.md.
+/// All product/catalog imagery is real photography from assets/images/ (see
+/// MIGRATION_NOTES.md "Demo content removed"). The handful of `_seed(...)`
+/// placeholders below back only editorial/content imagery that has no real
+/// photography yet — Journal post covers and the Our Story page — never a
+/// product.
 ///
 /// Uses placehold.co rather than picsum.photos: picsum's final (post-redirect)
 /// image response omits `Access-Control-Allow-Origin`, which Flutter Web's
@@ -17,23 +18,6 @@ class AppImages {
     return 'https://placehold.co/${w}x$h/F7F5F0/8C8C88.png?font=roboto&text=$label';
   }
 
-  static final hoodieBlack = _seed('st-hoodie-black');
-  static final hoodieBone = _seed('st-hoodie-bone');
-  static final hoodieModel = _seed('st-hoodie-model');
-  static final teeCream = _seed('st-tee-cream');
-  static final teeCreamModel = _seed('st-tee-cream-model');
-  static final teeBlack = _seed('st-tee-black');
-  static final teeStone = _seed('st-tee-stone');
-  static final capBlack = _seed('st-cap-black');
-  static final capModel = _seed('st-cap-model');
-  static final crewStone = _seed('st-crew-stone');
-  static final crewModel = _seed('st-crew-model');
-  static final crewCream = _seed('st-crew-cream');
-  static final longsleeveBlack = _seed('st-longsleeve-black');
-  static final beanieStone = _seed('st-beanie-stone');
-  static final tote = _seed('st-tote');
-  static final sweatpantsBlack = _seed('st-sweatpants-black');
-  static final zipBlack = _seed('st-zip-black');
   static final lookbookField = _seed('st-lookbook-field', w: 1600, h: 2000);
   static final lookbookDetail = _seed('st-lookbook-detail');
   static final lookbookSteps = _seed('st-lookbook-steps');

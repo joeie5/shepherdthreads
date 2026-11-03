@@ -19,7 +19,7 @@ class SearchPage extends ConsumerStatefulWidget {
   ConsumerState<SearchPage> createState() => _SearchPageState();
 }
 
-const _trending = ['Saved Hoodie', 'Crowned T-Shirt', 'Crewneck', 'Cap', 'Grey', 'Gift for pastor'];
+const _trending = ['Saved Hoodie', 'Crowned T-Shirt', 'Saved Joggers', 'Identity Polo', 'Black', 'Grey'];
 const _suggestedCategories = [
   ('Hoodies', '/shop?category=Hoodies'),
   ('Crewnecks', '/shop?category=Crewnecks'),

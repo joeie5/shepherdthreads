@@ -12,9 +12,9 @@ import '../../shared/widgets/site_container.dart';
 /// Ported from react-source/src/pages/Collections.tsx
 
 final Map<CollectionId, String> _collectionImages = {
-  CollectionId.psalm23: AppImages.teeCreamModel,
-  CollectionId.essentials: AppImages.hoodieModel,
-  CollectionId.sabbath: AppImages.crewModel,
+  CollectionId.psalm23: AppImages.crownedTeeFrontBlack,
+  CollectionId.essentials: AppImages.savedHoodieFrontGrey,
+  CollectionId.sabbath: AppImages.savedJoggersFrontMediumBlue,
 };
 
 class CollectionsPage extends StatelessWidget {

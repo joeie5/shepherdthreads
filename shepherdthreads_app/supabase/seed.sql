@@ -1,6 +1,20 @@
 -- Generated from lib/core/data/*.dart by tool/generate_seed.dart
 -- Review before running. Safe to re-run (upserts on primary key).
 
+-- Demo/placeholder products removed from the catalog (lib/core/data/products_data.dart
+-- now ships only the 5 products with real photography in assets/images/). Delete
+-- cascades to product_color_variants via its FK.
+delete from products where id in (
+  'still-waters-crewneck',
+  'threaded-crook-cap',
+  'narrow-path-long-sleeve',
+  'selah-beanie',
+  'washed-grace-tee',
+  'cornerstone-crewneck',
+  'shepherds-zip-hoodie',
+  'daily-bread-tote'
+);
+
 -- collections
 insert into collections (id, name, description) values ('psalm23', 'The Psalm 23 Collection', 'Soft tones and quiet details inspired by green pastures and still waters.') on conflict (id) do update set name = excluded.name, description = excluded.description;
 insert into collections (id, name, description) values ('essentials', 'Daily Essentials', 'The foundations. Heavyweight staples built to be worn every day for years.') on conflict (id) do update set name = excluded.name, description = excluded.description;
@@ -48,144 +62,11 @@ insert into product_color_variants (product_id, name, hex, images, sort_order) v
 insert into product_color_variants (product_id, name, hex, images, sort_order) values ('crowned-tee', 'Light Apricot', '#F1D9C4', ARRAY['assets/images/crowned-tee-front-light-apricot.png']::text[], 1);
 
 insert into products (id, name, subtitle, price, compare_at, category, collection_id, description, verse_text, verse_reference, sizes, sold_out_sizes, sold_out, is_new, bestseller_rank, added_on, details, fabric, care) values (
-  'still-waters-crewneck', 'Still Waters Crewneck', 'Garment-Dyed Fleece', 98.0, null,
-  'crewnecks', 'psalm23',
-  'Garment-dyed in a soft stone grey that only gets better with wear. Relaxed through the body with a slightly cropped length to sit well over trousers.', 'He leads me beside still waters.', 'Psalm 23:2',
-  ARRAY['XS', 'S', 'M', 'L', 'XL', 'XXL']::text[], ARRAY['XXL']::text[], false, false,
-  4, '2026-08-14', ARRAY['Relaxed fit, slightly cropped', 'Garment-dyed — each piece varies subtly', 'Flatlock seams for comfort']::text[], '100% organic cotton, 420gsm loopback fleece.', ARRAY['Machine wash cold, inside out, with like colors', 'Tumble dry low or hang to dry', 'Do not bleach', 'Cool iron, avoid embroidery']::text[]
-) on conflict (id) do update set
-  name = excluded.name, subtitle = excluded.subtitle, price = excluded.price, 
-  compare_at = excluded.compare_at, category = excluded.category, 
-  collection_id = excluded.collection_id, description = excluded.description, 
-  verse_text = excluded.verse_text, verse_reference = excluded.verse_reference, 
-  sizes = excluded.sizes, sold_out_sizes = excluded.sold_out_sizes, 
-  sold_out = excluded.sold_out, is_new = excluded.is_new, 
-  bestseller_rank = excluded.bestseller_rank, added_on = excluded.added_on, 
-  details = excluded.details, fabric = excluded.fabric, care = excluded.care, 
-  updated_at = now();
-delete from product_color_variants where product_id = 'still-waters-crewneck';
-insert into product_color_variants (product_id, name, hex, images, sort_order) values ('still-waters-crewneck', 'Stone', '#9A9893', ARRAY['https://placehold.co/1200x1500/F7F5F0/8C8C88.png?font=roboto&text=crew%20stone', 'https://placehold.co/1200x1500/F7F5F0/8C8C88.png?font=roboto&text=crew%20model']::text[], 0);
-
-insert into products (id, name, subtitle, price, compare_at, category, collection_id, description, verse_text, verse_reference, sizes, sold_out_sizes, sold_out, is_new, bestseller_rank, added_on, details, fabric, care) values (
-  'threaded-crook-cap', 'Threaded Crook Cap', 'Unstructured Six-Panel', 42.0, null,
-  'headwear', 'essentials',
-  'A low-profile, unstructured cap in washed cotton twill with our crook-and-cross mark embroidered tonally at the front.', null, null,
-  ARRAY['One Size']::text[], ARRAY[]::text[], false, false,
-  3, '2026-06-20', ARRAY['Adjustable brass slide closure', 'Curved brim', 'Tonal embroidery']::text[], '100% cotton twill, enzyme washed.', ARRAY['Spot clean only', 'Reshape while damp', 'Do not machine wash']::text[]
-) on conflict (id) do update set
-  name = excluded.name, subtitle = excluded.subtitle, price = excluded.price, 
-  compare_at = excluded.compare_at, category = excluded.category, 
-  collection_id = excluded.collection_id, description = excluded.description, 
-  verse_text = excluded.verse_text, verse_reference = excluded.verse_reference, 
-  sizes = excluded.sizes, sold_out_sizes = excluded.sold_out_sizes, 
-  sold_out = excluded.sold_out, is_new = excluded.is_new, 
-  bestseller_rank = excluded.bestseller_rank, added_on = excluded.added_on, 
-  details = excluded.details, fabric = excluded.fabric, care = excluded.care, 
-  updated_at = now();
-delete from product_color_variants where product_id = 'threaded-crook-cap';
-insert into product_color_variants (product_id, name, hex, images, sort_order) values ('threaded-crook-cap', 'Black', '#0A0A0A', ARRAY['https://placehold.co/1200x1500/F7F5F0/8C8C88.png?font=roboto&text=cap%20black', 'https://placehold.co/1200x1500/F7F5F0/8C8C88.png?font=roboto&text=cap%20model']::text[], 0);
-
-insert into products (id, name, subtitle, price, compare_at, category, collection_id, description, verse_text, verse_reference, sizes, sold_out_sizes, sold_out, is_new, bestseller_rank, added_on, details, fabric, care) values (
-  'narrow-path-long-sleeve', 'Narrow Path Long Sleeve', 'Heavyweight Long Sleeve', 64.0, null,
-  'tees', 'essentials',
-  'A clean long sleeve with a relaxed body and slim cuff. Made for layering, built to hold up through the seasons.', 'Narrow is the gate and difficult is the way which leads to life.', 'Matthew 7:14',
-  ARRAY['XS', 'S', 'M', 'L', 'XL', 'XXL']::text[], ARRAY[]::text[], false, true,
-  6, '2026-10-18', ARRAY['Relaxed body, slim ribbed cuffs', 'Tonal back-neck print', 'Side-seamed construction']::text[], '100% combed cotton, 240gsm jersey.', ARRAY['Machine wash cold, inside out, with like colors', 'Tumble dry low or hang to dry', 'Do not bleach', 'Cool iron, avoid embroidery']::text[]
-) on conflict (id) do update set
-  name = excluded.name, subtitle = excluded.subtitle, price = excluded.price, 
-  compare_at = excluded.compare_at, category = excluded.category, 
-  collection_id = excluded.collection_id, description = excluded.description, 
-  verse_text = excluded.verse_text, verse_reference = excluded.verse_reference, 
-  sizes = excluded.sizes, sold_out_sizes = excluded.sold_out_sizes, 
-  sold_out = excluded.sold_out, is_new = excluded.is_new, 
-  bestseller_rank = excluded.bestseller_rank, added_on = excluded.added_on, 
-  details = excluded.details, fabric = excluded.fabric, care = excluded.care, 
-  updated_at = now();
-delete from product_color_variants where product_id = 'narrow-path-long-sleeve';
-insert into product_color_variants (product_id, name, hex, images, sort_order) values ('narrow-path-long-sleeve', 'Black', '#0A0A0A', ARRAY['https://placehold.co/1200x1500/F7F5F0/8C8C88.png?font=roboto&text=longsleeve%20black', 'https://placehold.co/1600x2000/F7F5F0/8C8C88.png?font=roboto&text=lookbook%20field']::text[], 0);
-
-insert into products (id, name, subtitle, price, compare_at, category, collection_id, description, verse_text, verse_reference, sizes, sold_out_sizes, sold_out, is_new, bestseller_rank, added_on, details, fabric, care) values (
-  'selah-beanie', 'Selah Beanie', 'Merino Rib Knit', 38.0, null,
-  'headwear', 'sabbath',
-  'A fine-ribbed merino beanie with a deep fold. Selah — pause, and reflect.', null, null,
-  ARRAY['One Size']::text[], ARRAY[]::text[], true, false,
-  5, '2026-10-01', ARRAY['Double-layer fold cuff', 'Fine 2×2 rib', 'Woven label at cuff']::text[], '100% extra-fine merino wool.', ARRAY['Hand wash cold', 'Lay flat to dry']::text[]
-) on conflict (id) do update set
-  name = excluded.name, subtitle = excluded.subtitle, price = excluded.price, 
-  compare_at = excluded.compare_at, category = excluded.category, 
-  collection_id = excluded.collection_id, description = excluded.description, 
-  verse_text = excluded.verse_text, verse_reference = excluded.verse_reference, 
-  sizes = excluded.sizes, sold_out_sizes = excluded.sold_out_sizes, 
-  sold_out = excluded.sold_out, is_new = excluded.is_new, 
-  bestseller_rank = excluded.bestseller_rank, added_on = excluded.added_on, 
-  details = excluded.details, fabric = excluded.fabric, care = excluded.care, 
-  updated_at = now();
-delete from product_color_variants where product_id = 'selah-beanie';
-insert into product_color_variants (product_id, name, hex, images, sort_order) values ('selah-beanie', 'Stone', '#9A9893', ARRAY['https://placehold.co/1200x1500/F7F5F0/8C8C88.png?font=roboto&text=beanie%20stone', 'https://placehold.co/1200x1500/F7F5F0/8C8C88.png?font=roboto&text=lookbook%20detail']::text[], 0);
-
-insert into products (id, name, subtitle, price, compare_at, category, collection_id, description, verse_text, verse_reference, sizes, sold_out_sizes, sold_out, is_new, bestseller_rank, added_on, details, fabric, care) values (
-  'washed-grace-tee', 'Washed Grace Tee', 'Garment-Dyed Tee', 44.0, 54.0,
-  'tees', 'psalm23',
-  'Our heavyweight tee, washed down to a soft stone grey with a lived-in hand. Grace, by definition, is undeserved — this price is too.', 'For by grace you have been saved through faith.', 'Ephesians 2:8',
-  ARRAY['XS', 'S', 'M', 'L', 'XL', 'XXL']::text[], ARRAY['XS', 'S']::text[], false, false,
-  8, '2026-07-10', ARRAY['Oversized boxy fit', 'Garment-dyed and enzyme washed', 'Ribbed collar']::text[], '100% cotton, 260gsm jersey.', ARRAY['Machine wash cold, inside out, with like colors', 'Tumble dry low or hang to dry', 'Do not bleach', 'Cool iron, avoid embroidery']::text[]
-) on conflict (id) do update set
-  name = excluded.name, subtitle = excluded.subtitle, price = excluded.price, 
-  compare_at = excluded.compare_at, category = excluded.category, 
-  collection_id = excluded.collection_id, description = excluded.description, 
-  verse_text = excluded.verse_text, verse_reference = excluded.verse_reference, 
-  sizes = excluded.sizes, sold_out_sizes = excluded.sold_out_sizes, 
-  sold_out = excluded.sold_out, is_new = excluded.is_new, 
-  bestseller_rank = excluded.bestseller_rank, added_on = excluded.added_on, 
-  details = excluded.details, fabric = excluded.fabric, care = excluded.care, 
-  updated_at = now();
-delete from product_color_variants where product_id = 'washed-grace-tee';
-insert into product_color_variants (product_id, name, hex, images, sort_order) values ('washed-grace-tee', 'Stone', '#9A9893', ARRAY['https://placehold.co/1200x1500/F7F5F0/8C8C88.png?font=roboto&text=tee%20stone', 'https://placehold.co/1200x1500/F7F5F0/8C8C88.png?font=roboto&text=tee%20cream%20model']::text[], 0);
-
-insert into products (id, name, subtitle, price, compare_at, category, collection_id, description, verse_text, verse_reference, sizes, sold_out_sizes, sold_out, is_new, bestseller_rank, added_on, details, fabric, care) values (
-  'cornerstone-crewneck', 'Cornerstone Crewneck', 'Heavyweight Fleece', 98.0, null,
-  'crewnecks', 'essentials',
-  'A foundational crew in natural ecru. Heavy enough to stand on its own in autumn, clean enough to wear anywhere.', 'The stone the builders rejected has become the cornerstone.', 'Psalm 118:22',
-  ARRAY['XS', 'S', 'M', 'L', 'XL', 'XXL']::text[], ARRAY[]::text[], false, true,
-  7, '2026-10-24', ARRAY['Relaxed fit', 'Raglan shoulder seam', 'V-insert at neck']::text[], '100% organic cotton, 480gsm brushed fleece.', ARRAY['Machine wash cold, inside out, with like colors', 'Tumble dry low or hang to dry', 'Do not bleach', 'Cool iron, avoid embroidery']::text[]
-) on conflict (id) do update set
-  name = excluded.name, subtitle = excluded.subtitle, price = excluded.price, 
-  compare_at = excluded.compare_at, category = excluded.category, 
-  collection_id = excluded.collection_id, description = excluded.description, 
-  verse_text = excluded.verse_text, verse_reference = excluded.verse_reference, 
-  sizes = excluded.sizes, sold_out_sizes = excluded.sold_out_sizes, 
-  sold_out = excluded.sold_out, is_new = excluded.is_new, 
-  bestseller_rank = excluded.bestseller_rank, added_on = excluded.added_on, 
-  details = excluded.details, fabric = excluded.fabric, care = excluded.care, 
-  updated_at = now();
-delete from product_color_variants where product_id = 'cornerstone-crewneck';
-insert into product_color_variants (product_id, name, hex, images, sort_order) values ('cornerstone-crewneck', 'Ecru', '#E8E0CF', ARRAY['https://placehold.co/1200x1500/F7F5F0/8C8C88.png?font=roboto&text=crew%20cream', 'https://placehold.co/1200x1500/F7F5F0/8C8C88.png?font=roboto&text=cap%20model']::text[], 0);
-
-insert into products (id, name, subtitle, price, compare_at, category, collection_id, description, verse_text, verse_reference, sizes, sold_out_sizes, sold_out, is_new, bestseller_rank, added_on, details, fabric, care) values (
-  'shepherds-zip-hoodie', 'Shepherd’s Zip Hoodie', 'Full-Zip Heavyweight', 128.0, null,
-  'hoodies', 'essentials',
-  'The full-zip version of our signature fleece with a matte black two-way zip and deep hand pockets.', null, null,
-  ARRAY['XS', 'S', 'M', 'L', 'XL', 'XXL']::text[], ARRAY[]::text[], false, true,
-  9, '2026-10-28', ARRAY['Two-way matte metal zip', 'Double-layer hood', 'Hidden phone pocket']::text[], '100% organic cotton, 480gsm brushed fleece.', ARRAY['Machine wash cold, inside out, with like colors', 'Tumble dry low or hang to dry', 'Do not bleach', 'Cool iron, avoid embroidery']::text[]
-) on conflict (id) do update set
-  name = excluded.name, subtitle = excluded.subtitle, price = excluded.price, 
-  compare_at = excluded.compare_at, category = excluded.category, 
-  collection_id = excluded.collection_id, description = excluded.description, 
-  verse_text = excluded.verse_text, verse_reference = excluded.verse_reference, 
-  sizes = excluded.sizes, sold_out_sizes = excluded.sold_out_sizes, 
-  sold_out = excluded.sold_out, is_new = excluded.is_new, 
-  bestseller_rank = excluded.bestseller_rank, added_on = excluded.added_on, 
-  details = excluded.details, fabric = excluded.fabric, care = excluded.care, 
-  updated_at = now();
-delete from product_color_variants where product_id = 'shepherds-zip-hoodie';
-insert into product_color_variants (product_id, name, hex, images, sort_order) values ('shepherds-zip-hoodie', 'Black', '#0A0A0A', ARRAY['https://placehold.co/1200x1500/F7F5F0/8C8C88.png?font=roboto&text=zip%20black', 'https://placehold.co/1200x1500/F7F5F0/8C8C88.png?font=roboto&text=hoodie%20model']::text[], 0);
-
-insert into products (id, name, subtitle, price, compare_at, category, collection_id, description, verse_text, verse_reference, sizes, sold_out_sizes, sold_out, is_new, bestseller_rank, added_on, details, fabric, care) values (
   'saved-joggers', 'Saved Joggers', 'Relaxed Fleece Jogger', 24.2, null,
   'bottoms', 'sabbath',
   'A relaxed, straight-leg jogger cut from the same fleece as our hoodies, printed with our mark and a portrait of Christ at the lower leg. Made for the day you set apart.', 'Come to me, all who labor and are heavy laden, and I will give you rest.', 'Matthew 11:28',
   ARRAY['S', 'M', 'L', 'XL', '2XL']::text[], ARRAY[]::text[], false, false,
-  10, '2026-09-12', ARRAY['Straight leg, elastic waist with drawcord', 'Side pockets', 'Printed leg graphic']::text[], '100% organic cotton, brushed fleece.', ARRAY['Machine wash cold, inside out, with like colors', 'Tumble dry low or hang to dry', 'Do not bleach', 'Cool iron, avoid embroidery']::text[]
+  3, '2026-09-12', ARRAY['Straight leg, elastic waist with drawcord', 'Side pockets', 'Printed leg graphic']::text[], '100% organic cotton, brushed fleece.', ARRAY['Machine wash cold, inside out, with like colors', 'Tumble dry low or hang to dry', 'Do not bleach', 'Cool iron, avoid embroidery']::text[]
 ) on conflict (id) do update set
   name = excluded.name, subtitle = excluded.subtitle, price = excluded.price, 
   compare_at = excluded.compare_at, category = excluded.category, 
@@ -205,7 +86,7 @@ insert into products (id, name, subtitle, price, compare_at, category, collectio
   'tees', 'essentials',
   'A clean pique polo with contrast white piping and collar, printed "Child of God" across the back — smart enough for church, relaxed enough for everywhere else.', 'So you are no longer a slave, but a son, and if a son, then an heir through God.', 'Galatians 3:26',
   ARRAY['S', 'M', 'L', 'XL', '2XL', '3XL']::text[], ARRAY[]::text[], false, false,
-  12, '2026-10-30', ARRAY['Ribbed polo collar with contrast piping', 'Three-button placket', '"Child of God" back print']::text[], '100% cotton pique.', ARRAY['Machine wash cold, inside out, with like colors', 'Tumble dry low or hang to dry', 'Do not bleach', 'Cool iron, avoid embroidery']::text[]
+  4, '2026-10-30', ARRAY['Ribbed polo collar with contrast piping', 'Three-button placket', '"Child of God" back print']::text[], '100% cotton pique.', ARRAY['Machine wash cold, inside out, with like colors', 'Tumble dry low or hang to dry', 'Do not bleach', 'Cool iron, avoid embroidery']::text[]
 ) on conflict (id) do update set
   name = excluded.name, subtitle = excluded.subtitle, price = excluded.price, 
   compare_at = excluded.compare_at, category = excluded.category, 
@@ -224,7 +105,7 @@ insert into products (id, name, subtitle, price, compare_at, category, collectio
   'bottoms', 'essentials',
   'A relaxed fleece short cut from the same fabric as our joggers, for warmer days set apart.', null, null,
   ARRAY['S', 'M', 'L', 'XL', '2XL']::text[], ARRAY[]::text[], false, false,
-  13, '2026-10-30', ARRAY['Elastic waist with drawcord', 'Side pockets']::text[], '100% organic cotton, brushed fleece.', ARRAY['Machine wash cold, inside out, with like colors', 'Tumble dry low or hang to dry', 'Do not bleach', 'Cool iron, avoid embroidery']::text[]
+  5, '2026-10-30', ARRAY['Elastic waist with drawcord', 'Side pockets']::text[], '100% organic cotton, brushed fleece.', ARRAY['Machine wash cold, inside out, with like colors', 'Tumble dry low or hang to dry', 'Do not bleach', 'Cool iron, avoid embroidery']::text[]
 ) on conflict (id) do update set
   name = excluded.name, subtitle = excluded.subtitle, price = excluded.price, 
   compare_at = excluded.compare_at, category = excluded.category, 
@@ -237,25 +118,6 @@ insert into products (id, name, subtitle, price, compare_at, category, collectio
   updated_at = now();
 delete from product_color_variants where product_id = 'identity-shorts';
 insert into product_color_variants (product_id, name, hex, images, sort_order) values ('identity-shorts', 'Black', '#0A0A0A', ARRAY['assets/images/identity-shorts-front-black.png', 'assets/images/identity-shorts-back-black.png']::text[], 0);
-
-insert into products (id, name, subtitle, price, compare_at, category, collection_id, description, verse_text, verse_reference, sizes, sold_out_sizes, sold_out, is_new, bestseller_rank, added_on, details, fabric, care) values (
-  'daily-bread-tote', 'Daily Bread Tote', '16oz Canvas Tote', 36.0, null,
-  'accessories', 'sabbath',
-  'A sturdy canvas tote with cotton webbing handles. Carries your Bible, your laptop, or the week’s groceries.', 'Give us this day our daily bread.', 'Matthew 6:11',
-  ARRAY['One Size']::text[], ARRAY[]::text[], false, false,
-  11, '2026-05-30', ARRAY['16oz natural canvas', 'Interior slip pocket', 'Embroidered cross at corner']::text[], '100% cotton canvas.', ARRAY['Spot clean', 'Hang to dry']::text[]
-) on conflict (id) do update set
-  name = excluded.name, subtitle = excluded.subtitle, price = excluded.price, 
-  compare_at = excluded.compare_at, category = excluded.category, 
-  collection_id = excluded.collection_id, description = excluded.description, 
-  verse_text = excluded.verse_text, verse_reference = excluded.verse_reference, 
-  sizes = excluded.sizes, sold_out_sizes = excluded.sold_out_sizes, 
-  sold_out = excluded.sold_out, is_new = excluded.is_new, 
-  bestseller_rank = excluded.bestseller_rank, added_on = excluded.added_on, 
-  details = excluded.details, fabric = excluded.fabric, care = excluded.care, 
-  updated_at = now();
-delete from product_color_variants where product_id = 'daily-bread-tote';
-insert into product_color_variants (product_id, name, hex, images, sort_order) values ('daily-bread-tote', 'Natural', '#E9E1CF', ARRAY['https://placehold.co/1200x1500/F7F5F0/8C8C88.png?font=roboto&text=tote', 'https://placehold.co/1200x1500/F7F5F0/8C8C88.png?font=roboto&text=lookbook%20detail']::text[], 0);
 
 -- journal_posts
 insert into journal_posts (slug, title, category, excerpt, image, author, date, read_time, featured, body, pull_quote_text, pull_quote_ref) values (
@@ -341,8 +203,8 @@ insert into faq_items (group_id, question, answer, sort_order) values ('faith', 
 truncate testimonials;
 insert into testimonials (name, location, quote, product, image, sort_order) values ('Alexis M.', 'Nashville, TN', 'Heaviest hoodie I own and somehow the one I reach for most. People ask about the cross on the chest every week.', 'Saved Hoodie', 'assets/images/saved-hoodie-front-medium-blue.png', 0);
 insert into testimonials (name, location, quote, product, image, sort_order) values ('Josiah R.', 'Austin, TX', 'Finally faith apparel I’d actually wear to dinner. Quiet, well-made, and it means something.', 'Crowned T-Shirt', 'assets/images/crowned-tee-front-black.png', 1);
-insert into testimonials (name, location, quote, product, image, sort_order) values ('Grace K.', 'Seattle, WA', 'Bought one for my youth pastor and ended up ordering three more for our leadership team.', 'Still Waters Crewneck', 'https://placehold.co/1200x1500/F7F5F0/8C8C88.png?font=roboto&text=crew%20model', 2);
-insert into testimonials (name, location, quote, product, image, sort_order) values ('Daniel P.', 'Chicago, IL', 'Fit, fabric and the story behind it. This is what I hoped Christian clothing could be.', 'Threaded Crook Cap', 'https://placehold.co/1200x1500/F7F5F0/8C8C88.png?font=roboto&text=cap%20model', 3);
+insert into testimonials (name, location, quote, product, image, sort_order) values ('Grace K.', 'Seattle, WA', 'Bought one for my youth pastor and ended up ordering three more for our leadership team.', 'Saved Joggers', 'assets/images/saved-joggers-front-medium-blue.png', 2);
+insert into testimonials (name, location, quote, product, image, sort_order) values ('Daniel P.', 'Chicago, IL', 'Fit, fabric and the story behind it. This is what I hoped Christian clothing could be.', 'Identity Polo', 'assets/images/identity-polo-front-black.webp', 3);
 
 -- delivery_options
 insert into delivery_options (id, name, eta, price) values ('standard', 'Standard', '3–5 business days', 0.0) on conflict (id) do update set name = excluded.name, eta = excluded.eta, price = excluded.price;

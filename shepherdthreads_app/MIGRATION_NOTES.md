@@ -149,26 +149,55 @@ freeShippingThreshold` (£150) and `taxRate` (8.25%) are still the React
 mock's placeholder numbers, not real UK shipping/VAT rules — flagged
 in-file, needs real figures before launch.
 
-### Product catalog: renamed to real inventory
-Five products were renamed/repriced/recolored from the original mock to
-match actual stock (`products_data.dart`): `good-shepherd-hoodie` →
-`saved-hoodie`, `psalm-23-tee` → `crowned-tee`, `sabbath-sweatpant` →
-`saved-joggers`, plus two new products (`identity-polo`, `identity-shorts`).
-Sizes follow the real inventory list (S–2XL, or S–3XL for the two products
-that carry a 3XL). The remaining mock products (crewneck, cap, beanie,
-etc.) were left as-is with placeholder imagery — they're filler content,
-not real SKUs yet.
+### Product catalog: real inventory only, demo content removed
+The catalog now ships exactly the 5 products with real photography in
+`assets/images/` — `products_data.dart` no longer has any
+placehold.co-backed demo products. Removed: Still Waters Crewneck,
+Threaded Crook Cap, Narrow Path Long Sleeve, Selah Beanie, Washed Grace
+Tee, Cornerstone Crewneck, Shepherd's Zip Hoodie, Daily Bread Tote — all
+8 were filler content from the original React mock with no real SKU or
+photography behind them. The 5 real products (`saved-hoodie`,
+`crowned-tee`, `saved-joggers`, `identity-polo`, `identity-shorts`) were
+earlier renamed/repriced from the original mock to match actual stock
+(`good-shepherd-hoodie` → `saved-hoodie`, `psalm-23-tee` → `crowned-tee`,
+`sabbath-sweatpant` → `saved-joggers`). Sizes follow the real inventory
+list (S–2XL, or S–3XL for the two that carry a 3XL).
 
-### Image placeholders
-The React source's `data/images.ts` referenced Magic Patterns-hosted files
-that weren't included in the export. `AppImages` in
-`lib/core/constants/app_images.dart` uses `placehold.co` (not
-`picsum.photos` — picsum's final redirected image response omits
+This also removed the Home page's "Green Pastures" lookbook section
+(`_Lookbook`/`_LookbookFigure` in `home_page.dart`) — it showed 3
+placehold.co stock images captioned for products that no longer exist
+("Psalm 23 Tee in Black · Narrow Path Long Sleeve", "Good Shepherd Hoodie
+in Bone"). No real lifestyle/lookbook photography exists to replace it
+with, so the section is gone rather than left broken.
+
+Three places had default/seed state still pointing at pre-rename or
+removed product IDs, which this pass fixed (each would silently render
+empty — same failure mode as the cart bug in the Supabase-wiring pass):
+`StoreNotifier`'s default wishlist (`store_provider.dart`), the two mock
+orders in `account_data.dart`, and the `testimonials` list (two entries
+referenced the removed Still Waters Crewneck/Threaded Crook Cap with
+placeholder images — now point at Saved Joggers/Identity Polo with real
+photos). The Collections page's 3 card images
+(`collections_page.dart`'s `_collectionImages`) were also placeholder
+stock photos — now use a real product photo per collection.
+
+**Supabase**: `supabase/seed.sql` was regenerated and now opens with an
+explicit `delete from products where id in (...)` for the 8 removed IDs
+(cascades to `product_color_variants`); run it again in the SQL Editor to
+sync the live database — the anon key the app uses only has `select` on
+`products`/`testimonials`, so this can't be applied from the client.
+
+### Image placeholders — editorial content only
+`AppImages` in `lib/core/constants/app_images.dart` still has a handful of
+`placehold.co`-backed constants (`workshop`, `journalBible`, `community`,
+`founder`, `lookbookField/Steps/Detail`), but none back a product anymore
+— they're used only by Journal post covers and the Our Story page, which
+have no real photography yet. (`placehold.co` over `picsum.photos`:
+picsum's final redirected image response omits
 `Access-Control-Allow-Origin`, which Flutter Web's CanvasKit/Skwasm
 renderer needs to decode cross-origin images; placehold.co sends
-`ACAO: *`) for every product that doesn't have real photography. These
-render as labeled boxes (e.g. "crew stone", "cap black") by design — not
-a bug — swap for real photos before launch.
+`ACAO: *`.) These render as labeled boxes (e.g. "workshop") by design —
+swap for real photos if/when that content gets photographed.
 
 ### Routing: path URL strategy + SPA rewrite
 Two issues found and fixed during Stage 6-9 verification, both specific to

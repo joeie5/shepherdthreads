@@ -82,12 +82,11 @@ class StoreNotifier extends Notifier<StoreState> {
         ),
       ],
       wishlist: const [
-        'still-waters-crewneck',
-        'threaded-crook-cap',
-        'cornerstone-crewneck',
-        'selah-beanie',
+        'saved-joggers',
+        'identity-polo',
+        'identity-shorts',
       ],
-      recentSearches: const ['hoodie', 'psalm 23', 'cap'],
+      recentSearches: const ['hoodie', 'joggers', 'polo'],
     );
   }
 
