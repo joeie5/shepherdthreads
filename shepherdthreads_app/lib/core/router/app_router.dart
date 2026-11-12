@@ -63,7 +63,10 @@ final appRouter = GoRouter(
           builder: (context, state) => ArticlePage(slug: state.pathParameters['slug']!),
         ),
         GoRoute(path: '/contact', builder: (context, state) => const ContactPage()),
-        GoRoute(path: '/faq', builder: (context, state) => const FaqPage()),
+        GoRoute(
+          path: '/faq',
+          builder: (context, state) => FaqPage(initialSection: state.uri.fragment.isEmpty ? null : state.uri.fragment),
+        ),
         GoRoute(path: '/:path(.*)', builder: (context, state) => const NotFoundPage()),
       ],
     ),

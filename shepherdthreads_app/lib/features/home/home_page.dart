@@ -91,6 +91,14 @@ class HomePage extends StatelessWidget {
           ),
         ),
         Container(
+          color: AppColors.ink,
+          padding: EdgeInsets.symmetric(vertical: isDesktop ? 96 : 64),
+          child: SiteContainer(
+            padding: EdgeInsets.symmetric(horizontal: hPad),
+            child: _Lookbook(isDesktop: isDesktop),
+          ),
+        ),
+        Container(
           color: AppColors.white,
           padding: EdgeInsets.symmetric(vertical: isDesktop ? 96 : 64),
           child: SiteContainer(
@@ -262,9 +270,146 @@ class _ProductGrid extends StatelessWidget {
         crossAxisCount: cols,
         mainAxisSpacing: 40,
         crossAxisSpacing: isDesktop ? 24 : 12,
-        childAspectRatio: 0.62,
+        // Narrower 2-column cells need relatively more height for the
+        // name/price/swatches block below the image than wider desktop
+        // cells do — 0.62 made that block taller than its cell, pushing the
+        // color swatches outside the grid tile's hit-testable bounds (taps
+        // on them silently did nothing on mobile).
+        childAspectRatio: isDesktop ? 0.62 : 0.56,
       ),
-      itemBuilder: (context, i) => ProductCard(product: products[i]),
+      itemBuilder: (context, i) => ProductCard(key: ValueKey(products[i].id), product: products[i]),
+    );
+  }
+}
+
+/// Ported from react-source/src/pages/Home.tsx's Lookbook section. Uses
+/// real lifestyle photography (assets/images/lifestyle/) rather than the
+/// original demo's broken placeholder image URLs — see MIGRATION_NOTES.md.
+/// Captions name actual current products instead of the removed/renamed
+/// ones the demo referenced, without claiming an exact colorway where the
+/// photo doesn't match one we carry.
+class _Lookbook extends StatelessWidget {
+  final bool isDesktop;
+  const _Lookbook({required this.isDesktop});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        SectionHeading(
+          dark: true,
+          title: 'Green Pastures',
+          description: 'The Fall ’26 lookbook. Shot at dawn outside Asheville, North Carolina.',
+          linkLabel: isDesktop ? 'View the journal' : null,
+          linkTo: isDesktop ? '/journal' : null,
+        ),
+        const SizedBox(height: 40),
+        if (isDesktop)
+          SizedBox(
+            height: 720,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Expanded(
+                  flex: 7,
+                  child: _LookbookFigure(
+                    image: AppImages.lookbookField,
+                    caption: 'Saved Hoodie · Saved Joggers',
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  flex: 5,
+                  child: Column(
+                    children: const [
+                      Expanded(
+                        child: _LookbookFigure(
+                          image: AppImages.lookbookSteps,
+                          caption: 'Saved Hoodie',
+                        ),
+                      ),
+                      SizedBox(height: 16),
+                      Expanded(
+                        child: _LookbookFigure(
+                          image: AppImages.lookbookDetail,
+                          caption: 'Every stitch, on purpose.',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          )
+        else
+          Column(
+            children: const [
+              AspectRatio(
+                aspectRatio: 4 / 5,
+                child: _LookbookFigure(
+                  image: AppImages.lookbookField,
+                  caption: 'Saved Hoodie · Saved Joggers',
+                ),
+              ),
+              SizedBox(height: 12),
+              AspectRatio(
+                aspectRatio: 16 / 10,
+                child: _LookbookFigure(
+                  image: AppImages.lookbookSteps,
+                  caption: 'Saved Hoodie',
+                ),
+              ),
+              SizedBox(height: 12),
+              AspectRatio(
+                aspectRatio: 16 / 10,
+                child: _LookbookFigure(
+                  image: AppImages.lookbookDetail,
+                  caption: 'Every stitch, on purpose.',
+                ),
+              ),
+            ],
+          ),
+      ],
+    );
+  }
+}
+
+class _LookbookFigure extends StatelessWidget {
+  final String image;
+  final String caption;
+  const _LookbookFigure({required this.image, required this.caption});
+
+  @override
+  Widget build(BuildContext context) {
+    return RepaintBoundary(
+      child: ClipRect(
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            AppImage(image, memCacheWidth: 900),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    colors: [Colors.black.withValues(alpha: 0.45), Colors.transparent],
+                  ),
+                ),
+                child: Text(
+                  caption,
+                  style: AppTextStyles.sans(fontSize: 13, color: AppColors.white.withValues(alpha: 0.85)),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

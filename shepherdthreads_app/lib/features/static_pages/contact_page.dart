@@ -5,15 +5,16 @@ import '../../core/theme/app_text_styles.dart';
 import '../../core/theme/app_theme.dart';
 import '../../shared/widgets/app_button.dart';
 import '../../shared/widgets/app_form_field.dart';
+import '../../shared/widgets/brand_icons.dart';
 import '../../shared/widgets/site_container.dart';
 
 /// Ported from react-source/src/pages/Contact.tsx
 const _topics = ['Order status', 'Returns & exchanges', 'Sizing help', 'Church or bulk orders', 'Partnerships', 'Something else'];
 const _shortcuts = [
-  ('Where’s my order?', '/faq'),
-  ('Start a return', '/faq'),
-  ('Find my size', '/faq'),
-  ('Our giving', '/faq'),
+  ('Where’s my order?', '/faq#shipping'),
+  ('Start a return', '/faq#returns'),
+  ('Find my size', '/faq#sizing'),
+  ('Our giving', '/faq#faith'),
 ];
 
 class ContactPage extends StatefulWidget {
@@ -195,6 +196,19 @@ class _ContactPageState extends State<ContactPage> {
           ],
         ),
         const SizedBox(height: 32),
+        Text('FOLLOW ALONG', style: AppTextStyles.sans(fontSize: 12, fontWeight: FontWeight.w500, letterSpacing: 1.2)),
+        const SizedBox(height: 16),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SocialIconButton(icon: Icons.camera_alt_outlined, label: 'Instagram', dark: false, onTap: () {}),
+            const SizedBox(width: 8),
+            SocialIconButton(icon: Icons.music_note_outlined, label: 'TikTok', dark: false, onTap: () {}),
+            const SizedBox(width: 8),
+            SocialIconButton(icon: Icons.play_arrow_outlined, label: 'YouTube', dark: false, onTap: () {}),
+          ],
+        ),
+        const SizedBox(height: 32),
         Container(
           padding: const EdgeInsets.only(top: 32),
           decoration: const BoxDecoration(border: Border(top: BorderSide(color: AppColors.hairline))),
@@ -237,9 +251,7 @@ class _ContactPageState extends State<ContactPage> {
                       .map((s) => InkWell(
                             onTap: () => context.go(s.$2),
                             child: Container(
-                              height: 40,
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
-                              alignment: Alignment.center,
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
                               decoration: BoxDecoration(color: AppColors.white, border: Border.all(color: AppColors.ink.withValues(alpha: 0.2))),
                               child: Text(s.$1, style: AppTextStyles.sans(fontSize: 13)),
                             ),

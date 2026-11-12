@@ -11,6 +11,12 @@ import 'core/theme/app_theme.dart';
 void main() async {
   usePathUrlStrategy();
   WidgetsFlutterBinding.ensureInitialized();
+  // Product photos are large (up to 1400x1400) and this app renders many of
+  // them at once (grids, carousels, color-swatch alternates). The default
+  // 100MB image cache fills up fast, which on CanvasKit evicts textures that
+  // are still on-screen and paints them solid black instead of re-fetching.
+  PaintingBinding.instance.imageCache.maximumSize = 500;
+  PaintingBinding.instance.imageCache.maximumSizeBytes = 300 << 20;
   await Supabase.initialize(url: SupabaseConfig.url, anonKey: SupabaseConfig.anonKey);
   // Replaces the bundled mock catalog with live data before first frame —
   // see loadLiveCatalog's doc comment in product_repository.dart for why

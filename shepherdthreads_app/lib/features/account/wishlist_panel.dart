@@ -6,6 +6,7 @@ import '../../core/models/product.dart';
 import '../../core/providers/store_provider.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
+import '../../core/theme/app_theme.dart';
 import '../../shared/widgets/app_button.dart';
 import '../../shared/widgets/app_image.dart';
 import '../../shared/widgets/price_text.dart';
@@ -53,8 +54,8 @@ class WishlistPanel extends ConsumerWidget {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: items.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: AppBreakpoints.isLargeDesktop(MediaQuery.sizeOf(context).width) ? 3 : 2,
               mainAxisSpacing: 32,
               crossAxisSpacing: 20,
               childAspectRatio: 0.6,

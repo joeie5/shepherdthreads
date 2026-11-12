@@ -44,7 +44,8 @@ class SocialIconButton extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback onTap;
-  const SocialIconButton({super.key, required this.icon, required this.label, required this.onTap});
+  final bool dark;
+  const SocialIconButton({super.key, required this.icon, required this.label, required this.onTap, this.dark = true});
 
   @override
   Widget build(BuildContext context) {
@@ -56,8 +57,8 @@ class SocialIconButton extends StatelessWidget {
           height: 40,
           width: 40,
           alignment: Alignment.center,
-          decoration: BoxDecoration(border: Border.all(color: AppColors.whiteBorder20)),
-          child: Icon(icon, size: 18, color: AppColors.white75),
+          decoration: BoxDecoration(border: Border.all(color: dark ? AppColors.whiteBorder20 : AppColors.hairline)),
+          child: Icon(icon, size: 18, color: dark ? AppColors.white75 : AppColors.ink75),
         ),
       ),
     );

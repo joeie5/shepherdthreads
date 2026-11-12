@@ -4,6 +4,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/theme/app_theme.dart';
 import '../../shared/widgets/app_button.dart';
+import '../../shared/widgets/app_header.dart';
 import '../../shared/widgets/logo.dart';
 
 /// Ported from react-source/src/pages/NotFound.tsx
@@ -12,10 +13,14 @@ class NotFoundPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = AppBreakpoints.isDesktop(MediaQuery.sizeOf(context).width);
+    final size = MediaQuery.sizeOf(context);
+    final isDesktop = AppBreakpoints.isDesktop(size.width);
+    final headerHeight = isDesktop ? AppHeader.desktopHeight : AppHeader.mobileHeight;
     return Container(
       color: AppColors.ink,
+      constraints: BoxConstraints(minHeight: size.height - headerHeight),
       padding: const EdgeInsets.symmetric(vertical: 96, horizontal: 20),
+      alignment: Alignment.center,
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 560),

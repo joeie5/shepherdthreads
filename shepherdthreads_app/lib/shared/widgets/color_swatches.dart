@@ -33,26 +33,33 @@ class ColorSwatches extends StatelessWidget {
               final active = c.name == selected;
               return Padding(
                 padding: const EdgeInsets.only(right: 8),
-                child: Tooltip(
-                  message: c.name,
-                  child: InkWell(
-                    customBorder: const CircleBorder(),
-                    onTap: () => onSelect(c.name),
-                    child: Container(
-                      padding: const EdgeInsets.all(3),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: active ? AppColors.ink : Colors.transparent, width: 1),
-                      ),
+                // Isolates this swatch's own compositing layer, consistent
+                // with the fix applied to ProductCard images — on this
+                // app's CanvasKit web build, a tap-triggered repaint of one
+                // widget has been observed to briefly corrupt an unrelated
+                // sibling's paint when they share a layer.
+                child: RepaintBoundary(
+                  child: Tooltip(
+                    message: c.name,
+                    child: InkWell(
+                      customBorder: const CircleBorder(),
+                      onTap: () => onSelect(c.name),
                       child: Container(
-                        height: dim,
-                        width: dim,
+                        padding: const EdgeInsets.all(3),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: _parseHex(c.hex),
-                          border: isLightColor(c.hex)
-                              ? Border.all(color: AppColors.ink.withValues(alpha: 0.15))
-                              : null,
+                          border: Border.all(color: active ? AppColors.ink : Colors.transparent, width: 1),
+                        ),
+                        child: Container(
+                          height: dim,
+                          width: dim,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: _parseHex(c.hex),
+                            border: isLightColor(c.hex)
+                                ? Border.all(color: AppColors.ink.withValues(alpha: 0.15))
+                                : null,
+                          ),
                         ),
                       ),
                     ),

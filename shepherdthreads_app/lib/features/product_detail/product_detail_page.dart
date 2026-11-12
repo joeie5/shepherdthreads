@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -42,6 +43,25 @@ class _ProductDetailPageState extends ConsumerState<ProductDetailPage> {
     super.initState();
     final product = getProductSync(widget.productId);
     if (product != null && product.sizes.length == 1) _size = product.sizes.first;
+    if (product != null) _precacheAllColors(product);
+  }
+
+  // Resolves every color variant's images into Flutter's image cache up
+  // front, rather than on-demand when a swatch is tapped. A product only has
+  // a couple of colors, so this is cheap, and it closes the window where a
+  // fast second swatch tap can land while the first color's image is still
+  // mid-fetch/decode — on CanvasKit that race has been observed to render
+  // a permanently black or broken image that never self-recovers.
+  void _precacheAllColors(Product product) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      for (final c in product.colors) {
+        for (final src in c.images) {
+          final provider = src.startsWith('assets/') ? AssetImage(src) as ImageProvider : CachedNetworkImageProvider(src);
+          precacheImage(provider, context);
+        }
+      }
+    });
   }
 
   void _onScroll() {

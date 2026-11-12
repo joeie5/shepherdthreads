@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import '../../core/constants/app_images.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/theme/app_theme.dart';
-import '../../shared/widgets/app_button.dart';
 import '../../shared/widgets/app_image.dart';
 import '../../shared/widgets/logo.dart';
 import '../../shared/widgets/site_container.dart';
@@ -185,32 +183,6 @@ class OurStoryPage extends StatelessWidget {
           text: 'Whatever you do, work heartily, as for the Lord and not for men.',
           reference: 'Colossians 3:23',
           dark: false,
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: hPad, vertical: isDesktop ? 112 : 64),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 680),
-              child: Column(
-                children: [
-                  Text('£184,000', style: AppTextStyles.serif(fontSize: isDesktop ? 96 : 64, height: 1)),
-                  const SizedBox(height: 16),
-                  Text('given to clean water and youth mentorship since 2024 — because of people like you.',
-                      textAlign: TextAlign.center, style: AppTextStyles.sans(fontSize: 16, color: AppColors.ink70)),
-                  const SizedBox(height: 40),
-                  Wrap(
-                    alignment: WrapAlignment.center,
-                    spacing: 12,
-                    runSpacing: 12,
-                    children: [
-                      AppButton(label: 'Shop the collection', size: AppButtonSize.lg, onPressed: () => context.go('/shop')),
-                      AppButton(label: 'Read the journal', size: AppButtonSize.lg, variant: AppButtonVariant.outline, onPressed: () => context.go('/journal')),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
         ),
       ],
     );

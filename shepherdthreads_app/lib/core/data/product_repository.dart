@@ -73,8 +73,17 @@ List<Product> relatedProductsSync(Product product, {int count = 6}) {
 /// instead of going blank.
 Future<void> loadLiveCatalog(ProductRepository repo) async {
   try {
-    final products = await repo.getAll().timeout(const Duration(seconds: 8));
-    final collections = await repo.getCollections().timeout(const Duration(seconds: 8));
+    // Both calls used to run sequentially, each with its own 8s timeout —
+    // a worst case of 16s staring at the splash screen before first paint.
+    // Running them concurrently and capping the combined wait at 5s (the
+    // catalog is 5 products; a healthy query returns in well under a
+    // second) keeps the splash screen as short as the network allows.
+    final results = await Future.wait([
+      repo.getAll(),
+      repo.getCollections(),
+    ]).timeout(const Duration(seconds: 5));
+    final products = results[0] as List<Product>;
+    final collections = results[1] as List<ProductCollection>;
     if (products.isNotEmpty) {
       mockProducts
         ..clear()

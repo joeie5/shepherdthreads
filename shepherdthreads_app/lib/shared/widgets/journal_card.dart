@@ -14,6 +14,13 @@ class JournalCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () => context.go('/journal/${post.slug}'),
+      // The card is tappable end-to-end (image, title, excerpt), but
+      // Material's default hover/splash overlay spanning that whole area —
+      // text included — reads as an unwanted grey highlight rather than
+      // useful feedback on a content card like this.
+      hoverColor: Colors.transparent,
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,

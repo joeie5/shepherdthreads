@@ -24,7 +24,8 @@ class _JournalPageState extends State<JournalPage> {
 
   @override
   Widget build(BuildContext context) {
-    final isDesktop = AppBreakpoints.isDesktop(MediaQuery.sizeOf(context).width);
+    final width = MediaQuery.sizeOf(context).width;
+    final isDesktop = AppBreakpoints.isDesktop(width);
     final hPad = isDesktop ? 32.0 : 20.0;
     final featured = journalPosts.firstWhere((p) => p.featured, orElse: () => journalPosts.first);
     final rest = journalPosts
@@ -90,11 +91,11 @@ class _JournalPageState extends State<JournalPage> {
                               child: InkWell(
                                 onTap: () => setState(() => _active = f),
                                 child: Container(
-                                  height: 36,
-                                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                                  alignment: Alignment.center,
-                                  color: _active == f ? AppColors.ink : Colors.transparent,
-                                  decoration: _active == f ? null : BoxDecoration(border: Border.all(color: AppColors.hairline)),
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+                                  decoration: BoxDecoration(
+                                    color: _active == f ? AppColors.ink : Colors.transparent,
+                                    border: _active == f ? null : Border.all(color: AppColors.hairline),
+                                  ),
                                   child: Text(f, style: AppTextStyles.sans(fontSize: 13, color: _active == f ? AppColors.white : AppColors.ink)),
                                 ),
                               ),
@@ -111,7 +112,7 @@ class _JournalPageState extends State<JournalPage> {
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: rest.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: isDesktop ? 3 : 1,
+                      crossAxisCount: AppBreakpoints.isLargeDesktop(width) ? 3 : (AppBreakpoints.isSmall(width) ? 2 : 1),
                       mainAxisSpacing: 56,
                       crossAxisSpacing: 24,
                       childAspectRatio: isDesktop ? 0.78 : 1.0,

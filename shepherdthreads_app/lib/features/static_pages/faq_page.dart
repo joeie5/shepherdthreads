@@ -9,8 +9,31 @@ import '../../shared/widgets/app_button.dart';
 import '../../shared/widgets/site_container.dart';
 
 /// Ported from react-source/src/pages/Faq.tsx
-class FaqPage extends StatelessWidget {
-  const FaqPage({super.key});
+class FaqPage extends StatefulWidget {
+  final String? initialSection;
+  const FaqPage({super.key, this.initialSection});
+
+  @override
+  State<FaqPage> createState() => _FaqPageState();
+}
+
+class _FaqPageState extends State<FaqPage> {
+  final _sectionKeys = {for (final g in faqGroups) g.id: GlobalKey()};
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialSection != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _scrollTo(widget.initialSection!));
+    }
+  }
+
+  void _scrollTo(String id) {
+    final key = _sectionKeys[id];
+    final ctx = key?.currentContext;
+    if (ctx == null) return;
+    Scrollable.ensureVisible(ctx, duration: const Duration(milliseconds: 300), curve: Curves.easeOut, alignment: 0, alignmentPolicy: ScrollPositionAlignmentPolicy.explicit);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +46,7 @@ class FaqPage extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         for (final g in faqGroups) ...[
-          Text(g.title.toUpperCase(), style: AppTextStyles.sectionHeading().copyWith(fontSize: 26)),
+          Text(g.title.toUpperCase(), key: _sectionKeys[g.id], style: AppTextStyles.sectionHeading().copyWith(fontSize: 26)),
           Container(
             margin: const EdgeInsets.only(top: 16),
             decoration: const BoxDecoration(border: Border(top: BorderSide(color: AppColors.ink))),
@@ -49,6 +72,42 @@ class FaqPage extends StatelessWidget {
           ),
         ),
       ],
+    );
+
+    final mobileNav = SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: faqGroups
+            .map((g) => Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: InkWell(
+                    onTap: () => _scrollTo(g.id),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      decoration: BoxDecoration(border: Border.all(color: AppColors.hairline)),
+                      child: Text(g.title, style: AppTextStyles.sans(fontSize: 13)),
+                    ),
+                  ),
+                ))
+            .toList(),
+      ),
+    );
+
+    final desktopNav = SizedBox(
+      width: 220,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: faqGroups
+            .map((g) => Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: InkWell(
+                    onTap: () => _scrollTo(g.id),
+                    child: Text(g.title, style: AppTextStyles.sans(fontSize: 14, color: AppColors.ink70)),
+                  ),
+                ))
+            .toList(),
+      ),
     );
 
     return Column(
@@ -80,24 +139,19 @@ class FaqPage extends StatelessWidget {
                 ? Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        width: 220,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: faqGroups
-                              .map((g) => Padding(
-                                    padding: const EdgeInsets.only(bottom: 8),
-                                    child: Text(g.title, style: AppTextStyles.sans(fontSize: 14, color: AppColors.ink70)),
-                                  ))
-                              .toList(),
-                        ),
-                      ),
+                      desktopNav,
                       const SizedBox(width: 80),
                       Expanded(child: ConstrainedBox(constraints: const BoxConstraints(maxWidth: 680), child: content)),
                     ],
                   )
-                : content,
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      mobileNav,
+                      const SizedBox(height: 32),
+                      content,
+                    ],
+                  ),
           ),
         ),
       ],

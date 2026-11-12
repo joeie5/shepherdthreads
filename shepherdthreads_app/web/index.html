@@ -29,6 +29,13 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
+  <!-- Opens the connection to Supabase (DNS + TLS handshake) and the
+       CanvasKit CDN while the browser is still downloading/parsing this
+       page, instead of waiting until Dart code issues the first request
+       after the engine boots — shaves real time off the splash screen. -->
+  <link rel="preconnect" href="https://skbebcjztkxmywznpwsx.supabase.co" crossorigin>
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+
   <title>Shepherds Thread</title>
   <link rel="manifest" href="manifest.json">
   <style>
@@ -61,6 +68,27 @@
       var splash = document.getElementById('splash');
       if (splash) splash.remove();
     });
+  </script>
+  <script>
+    // Flutter's own service-worker caching (flutter_service_worker.js) is
+    // deprecated and has been observed here to leave a stale worker
+    // intercepting requests after a deploy — flutter_bootstrap.js then
+    // hangs forever as "pending" under that worker, and the app never gets
+    // past the splash screen. We don't register a new service worker (see
+    // --pwa-strategy=none in the build), so any worker found here is a
+    // leftover from an older deploy; unregister it and reload once so the
+    // page is served directly over the network instead.
+    (function () {
+      if (!('serviceWorker' in navigator)) return;
+      if (sessionStorage.getItem('sw-cleanup-done')) return;
+      navigator.serviceWorker.getRegistrations().then(function (regs) {
+        if (regs.length === 0) return;
+        sessionStorage.setItem('sw-cleanup-done', '1');
+        Promise.all(regs.map(function (r) { return r.unregister(); })).then(function () {
+          window.location.reload();
+        });
+      });
+    })();
   </script>
   <!--
     You can customize the "flutter_bootstrap.js" script.

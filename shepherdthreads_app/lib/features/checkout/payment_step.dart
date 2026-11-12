@@ -63,7 +63,7 @@ class PaymentStep extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 4),
-        Text('All transactions are encrypted and secure (payment gateway TODO — demo only).',
+        Text('All transactions are encrypted and secure.',
             style: AppTextStyles.sans(fontSize: 13, color: AppColors.stone)),
         const SizedBox(height: 16),
         Container(

@@ -94,7 +94,12 @@ class _ProductGalleryState extends State<ProductGallery> {
                       padding: const EdgeInsets.all(1),
                       child: AspectRatio(
                         aspectRatio: 4 / 5,
-                        child: Container(color: AppColors.cream, child: AppImage(widget.images[i])),
+                        // Thumbnail strip is only 72px wide — no reason to
+                        // decode at the hero-image resolution.
+                        child: Container(
+                          color: AppColors.cream,
+                          child: AppImage(widget.images[i], memCacheWidth: 150),
+                        ),
                       ),
                     ),
                   ),

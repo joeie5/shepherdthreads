@@ -89,7 +89,7 @@ class _ProductCarouselState extends State<ProductCarousel> {
                     separatorBuilder: (_, _) => SizedBox(width: isDesktop ? 24 : 12),
                     itemBuilder: (context, i) => SizedBox(
                       width: itemWidth,
-                      child: ProductCard(product: widget.products[i]),
+                      child: ProductCard(key: ValueKey(widget.products[i].id), product: widget.products[i]),
                     ),
                   );
                 },

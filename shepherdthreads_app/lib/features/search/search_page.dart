@@ -98,6 +98,8 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                                 decoration: InputDecoration(
                                   isCollapsed: true,
                                   border: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
                                   filled: false,
                                   hintText: 'Search hoodies, verses, colors…',
                                   hintStyle: AppTextStyles.serif(fontSize: isDesktop ? 32 : 24, color: AppColors.stone),
@@ -158,9 +160,17 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                           crossAxisCount: isDesktop ? 4 : 2,
                           mainAxisSpacing: 40,
                           crossAxisSpacing: isDesktop ? 24 : 12,
-                          childAspectRatio: 0.62,
+                          // Narrower 2-column cells need relatively more
+                          // height for the name/price/swatches block below
+                          // the image than wider desktop cells do — 0.62
+                          // made that block taller than its cell, pushing
+                          // the color swatches outside the grid tile's
+                          // hit-testable bounds (taps on them silently did
+                          // nothing on mobile).
+                          childAspectRatio: isDesktop ? 0.62 : 0.56,
                         ),
-                        itemBuilder: (context, i) => ProductCard(product: popular[i]),
+                        itemBuilder: (context, i) =>
+                            ProductCard(key: ValueKey(popular[i].id), product: popular[i]),
                       ),
                     ],
                   )
@@ -186,9 +196,12 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                               crossAxisCount: isDesktop ? 3 : 2,
                               mainAxisSpacing: 40,
                               crossAxisSpacing: isDesktop ? 24 : 12,
-                              childAspectRatio: 0.62,
+                              // See the "Popular right now" grid above for
+                              // why mobile needs a taller ratio.
+                              childAspectRatio: isDesktop ? 0.62 : 0.56,
                             ),
-                            itemBuilder: (context, i) => ProductCard(product: results[i]),
+                            itemBuilder: (context, i) =>
+                                ProductCard(key: ValueKey(results[i].id), product: results[i]),
                           ),
                         ],
                       )
@@ -211,9 +224,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                                     .map((c) => InkWell(
                                           onTap: () => context.go(c.$2),
                                           child: Container(
-                                            height: 40,
-                                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                                            alignment: Alignment.center,
+                                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
                                             decoration: BoxDecoration(border: Border.all(color: AppColors.hairline)),
                                             child: Text(c.$1, style: AppTextStyles.sans(fontSize: 13)),
                                           ),
@@ -306,9 +317,7 @@ class _TrendingSearches extends StatelessWidget {
               .map((t) => InkWell(
                     onTap: () => onRun(t),
                     child: Container(
-                      height: 36,
-                      padding: const EdgeInsets.symmetric(horizontal: 14),
-                      alignment: Alignment.center,
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
                       decoration: BoxDecoration(border: Border.all(color: AppColors.hairline)),
                       child: Text(t, style: AppTextStyles.sans(fontSize: 13)),
                     ),

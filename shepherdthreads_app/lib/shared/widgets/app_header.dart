@@ -31,7 +31,10 @@ class AppHeader extends ConsumerWidget implements PreferredSizeWidget {
     final currentPath = GoRouterState.of(context).uri.path;
 
     return Container(
-      color: AppColors.ink,
+      decoration: const BoxDecoration(
+        color: AppColors.ink,
+        border: Border(bottom: BorderSide(color: AppColors.whiteBorder10)),
+      ),
       child: SafeArea(
         bottom: false,
         child: SiteContainer(
@@ -144,18 +147,28 @@ class _NavLink extends StatelessWidget {
     final baseStyle = AppTextStyles.navLabel(color: active ? AppColors.white : AppColors.white65);
     return InkWell(
       onTap: () => context.go(item.to),
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 10),
-        child: Text(
-          item.label.toUpperCase(),
-          style: active
-              ? baseStyle.copyWith(
-                  decoration: TextDecoration.underline,
-                  decorationColor: AppColors.brass,
-                  decorationThickness: 1.5,
-                )
-              : baseStyle,
-        ),
+      // Stack sizes itself to its non-positioned child (the text), and the
+      // Positioned line spans exactly that width via left:0/right:0 — this
+      // sidesteps IntrinsicWidth, which measured the empty line Container's
+      // intrinsic width as zero and wrapped the label text to fit it.
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 10),
+            child: Text(item.label.toUpperCase(), style: baseStyle),
+          ),
+          // A real line with its own gap below the text, rather than
+          // TextDecoration.underline — that draws right against the glyph
+          // baseline with no way to add breathing room, which read as
+          // cramped compared to the reference design's clear gap.
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 2.5,
+            child: Container(height: 1.5, color: active ? AppColors.brass : Colors.transparent),
+          ),
+        ],
       ),
     );
   }

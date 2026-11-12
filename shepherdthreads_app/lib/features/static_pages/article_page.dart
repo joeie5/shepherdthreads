@@ -154,7 +154,7 @@ class ArticlePage extends StatelessWidget {
                         flex: 2,
                         child: Row(
                           children: shopTheStory
-                              .map((p) => Expanded(child: Padding(padding: const EdgeInsets.symmetric(horizontal: 12), child: ProductCard(product: p))))
+                              .map((p) => Expanded(child: Padding(padding: const EdgeInsets.symmetric(horizontal: 12), child: ProductCard(key: ValueKey(p.id), product: p))))
                               .toList(),
                         ),
                       ),
@@ -169,7 +169,7 @@ class ArticlePage extends StatelessWidget {
                       const SizedBox(height: 24),
                       Row(
                         children: shopTheStory
-                            .map((p) => Expanded(child: Padding(padding: const EdgeInsets.symmetric(horizontal: 6), child: ProductCard(product: p))))
+                            .map((p) => Expanded(child: Padding(padding: const EdgeInsets.symmetric(horizontal: 6), child: ProductCard(key: ValueKey(p.id), product: p))))
                             .toList(),
                       ),
                     ],

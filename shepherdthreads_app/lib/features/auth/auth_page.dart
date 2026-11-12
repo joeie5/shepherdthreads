@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -241,9 +242,17 @@ class _AuthPageState extends ConsumerState<AuthPage> {
                       style: AppTextStyles.sans(fontSize: 12, color: AppColors.stone),
                       children: [
                         const TextSpan(text: 'By continuing you agree to our '),
-                        const TextSpan(text: 'Terms', style: TextStyle(decoration: TextDecoration.underline)),
+                        TextSpan(
+                          text: 'Terms',
+                          style: const TextStyle(decoration: TextDecoration.underline),
+                          recognizer: TapGestureRecognizer()..onTap = () => context.go('/faq'),
+                        ),
                         const TextSpan(text: ' and '),
-                        TextSpan(text: 'Privacy Policy', style: const TextStyle(decoration: TextDecoration.underline)),
+                        TextSpan(
+                          text: 'Privacy Policy',
+                          style: const TextStyle(decoration: TextDecoration.underline),
+                          recognizer: TapGestureRecognizer()..onTap = () => context.go('/faq'),
+                        ),
                         const TextSpan(text: '.'),
                       ],
                     ),

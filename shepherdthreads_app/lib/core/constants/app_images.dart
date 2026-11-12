@@ -18,9 +18,6 @@ class AppImages {
     return 'https://placehold.co/${w}x$h/F7F5F0/8C8C88.png?font=roboto&text=$label';
   }
 
-  static final lookbookField = _seed('st-lookbook-field', w: 1600, h: 2000);
-  static final lookbookDetail = _seed('st-lookbook-detail');
-  static final lookbookSteps = _seed('st-lookbook-steps');
   static final workshop = _seed('st-workshop', w: 1600, h: 900);
   static final journalBible = _seed('st-journal-bible');
   static final community = _seed('st-community');
@@ -58,4 +55,12 @@ class AppImages {
 
   /// hero now points at the real lifestyle shot (was a placeholder).
   static const hero = modelSavedSetBlack;
+
+  /// Lifestyle photography for the Home page's "Green Pastures" lookbook
+  /// section (see home_page.dart's `_Lookbook`). Provided directly by the
+  /// user — not product photography, so these aren't tied to any specific
+  /// ColorVariant.
+  static const lookbookField = 'assets/images/lifestyle/landscape.jpg';
+  static const lookbookSteps = 'assets/images/lifestyle/step.jpg';
+  static const lookbookDetail = 'assets/images/lifestyle/sewing.jpg';
 }

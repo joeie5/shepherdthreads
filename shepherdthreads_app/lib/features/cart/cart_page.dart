@@ -92,12 +92,14 @@ class CartPage extends ConsumerWidget {
           decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: AppColors.hairline))),
           child: Column(
             children: [
-              for (final item in store.cart)
+              for (var i = 0; i < store.cart.length; i++)
                 Container(
-                  decoration: const BoxDecoration(
-                    border: Border(top: BorderSide(color: AppColors.hairline)),
-                  ),
-                  child: CartLineItem(item: item, size: CartLineItemSize.full),
+                  decoration: i == 0
+                      ? null
+                      : const BoxDecoration(
+                          border: Border(top: BorderSide(color: AppColors.hairline)),
+                        ),
+                  child: CartLineItem(item: store.cart[i], size: CartLineItemSize.full),
                 ),
             ],
           ),
